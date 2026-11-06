@@ -1,0 +1,411 @@
+@import 'tailwindcss';
+
+/*
+ * Kanbot design tokens
+ * Primitive → semantic → component-ish aliases used by Tailwind utilities.
+ * Components only reference these tokens, never raw colour values.
+ */
+:root {
+  color-scheme: light;
+
+  /* Primitives */
+  --ink-950: #0b1120;
+  --ink-900: #0f172a;
+  --ink-700: #334155;
+  --ink-500: #64748b;
+  --ink-300: #cbd5e1;
+  --ink-200: #e2e8f0;
+  --ink-100: #f1f5f9;
+  --ink-50: #f8fafc;
+  --indigo-700: #4338ca;
+  --indigo-600: #4f46e5;
+  --indigo-500: #6366f1;
+  --indigo-100: #e0e7ff;
+  --indigo-50: #eef2ff;
+  --green-600: #16a34a;
+  --green-500: #22c55e;
+  --red-600: #dc2626;
+  --red-700: #b91c1c;
+  --sky-600: #0284c7;
+  --amber-500: #f59e0b;
+  --teal-700: #0f766e;
+  --teal-600: #0d9488;
+  --teal-100: #ccfbf1;
+  --teal-50: #f0fdfa;
+  --amber-700: #b45309;
+  --amber-600: #d97706;
+  --amber-100: #fef3c7;
+  --amber-50: #fffbeb;
+  --rose-700: #be123c;
+  --rose-600: #e11d48;
+  --rose-100: #ffe4e6;
+  --rose-50: #fff1f2;
+  --violet-700: #6d28d9;
+  --violet-600: #7c3aed;
+  --violet-100: #ede9fe;
+  --violet-50: #f5f3ff;
+
+  /* Semantic */
+  --background: var(--ink-50);
+  --foreground: var(--ink-900);
+  --card: #ffffff;
+  --card-foreground: var(--ink-900);
+  --muted: var(--ink-100);
+  --muted-foreground: var(--ink-500);
+  --border: var(--ink-200);
+  --input: var(--ink-300);
+  --ring: var(--indigo-500);
+  --primary: var(--indigo-600);
+  --primary-hover: var(--indigo-700);
+  --primary-active: #3730a3;
+  --primary-foreground: #ffffff;
+  --secondary: var(--indigo-50);
+  --secondary-hover: var(--indigo-100);
+  --secondary-foreground: var(--indigo-700);
+  --accent: var(--ink-100);
+  --accent-foreground: var(--ink-900);
+  --destructive: var(--red-600);
+  --destructive-hover: var(--red-700);
+  --destructive-foreground: #ffffff;
+  --success: var(--green-600);
+  --success-foreground: #ffffff;
+  --info: var(--sky-600);
+  --info-foreground: #ffffff;
+  --error: var(--red-600);
+
+  /* Brand-adjacent tokens */
+  --brand-accent: var(--green-500);
+  --brand-ink: #1e1b4b;
+
+  /* Todo metadata tags (type / priority / status) */
+  --type-task: var(--sky-600);
+  --type-task-soft: #e0f2fe;
+  --type-story: var(--violet-600);
+  --type-story-soft: var(--violet-100);
+  --type-bug: var(--rose-600);
+  --type-bug-soft: var(--rose-100);
+  --priority-low: var(--ink-500);
+  --priority-low-soft: var(--ink-100);
+  --priority-medium: var(--sky-600);
+  --priority-medium-soft: #e0f2fe;
+  --priority-high: var(--amber-700);
+  --priority-high-soft: var(--amber-100);
+  --priority-urgent: var(--rose-700);
+  --priority-urgent-soft: var(--rose-100);
+  --status-todo: var(--ink-500);
+  --status-todo-soft: var(--ink-100);
+  --status-in-progress: var(--sky-600);
+  --status-in-progress-soft: #e0f2fe;
+  --status-in-review: var(--violet-600);
+  --status-in-review-soft: var(--violet-100);
+  --status-done: var(--green-600);
+  --status-done-soft: #dcfce7;
+
+  /* Workspace chrome */
+  --overlay: rgb(2 6 23 / 0.62);
+  --sidebar: #16123d;
+  --sidebar-foreground: #eceafd;
+  --sidebar-muted: #a8a3cf;
+  --sidebar-border: rgb(255 255 255 / 0.09);
+  --sidebar-hover: rgb(255 255 255 / 0.07);
+  --sidebar-active: rgb(255 255 255 / 0.12);
+
+  /* Per-project accent (overridden by .project-tone-* classes) */
+  --tone: var(--primary);
+  --tone-soft: var(--secondary);
+
+  /* Typography */
+  --font-body: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display-family: 'Plus Jakarta Sans', 'Inter', ui-sans-serif, system-ui, sans-serif;
+
+  --radius: 0.75rem;
+}
+
+.dark {
+  color-scheme: dark;
+
+  --background: var(--ink-950);
+  --foreground: var(--ink-100);
+  --card: var(--ink-900);
+  --card-foreground: var(--ink-100);
+  --muted: #1e293b;
+  --muted-foreground: #94a3b8;
+  --border: #1e293b;
+  --input: #334155;
+  --ring: #818cf8;
+  --primary: var(--indigo-500);
+  --primary-hover: #818cf8;
+  --primary-active: var(--indigo-600);
+  --primary-foreground: #ffffff;
+  --secondary: #1e1b4b;
+  --secondary-hover: #312e81;
+  --secondary-foreground: #c7d2fe;
+  --accent: #1e293b;
+  --accent-foreground: var(--ink-100);
+  --destructive: #f87171;
+  --destructive-hover: #fca5a5;
+  --destructive-foreground: #450a0a;
+  --success: #4ade80;
+  --success-foreground: #052e16;
+  --info: #38bdf8;
+  --info-foreground: #082f49;
+  --error: #f87171;
+
+  --overlay: rgb(0 0 0 / 0.72);
+  --sidebar: #100d2c;
+  --sidebar-foreground: var(--ink-100);
+  --sidebar-muted: #9a95c4;
+  --sidebar-border: rgb(255 255 255 / 0.08);
+  --sidebar-hover: rgb(255 255 255 / 0.06);
+  --sidebar-active: rgb(255 255 255 / 0.11);
+
+  --type-task: #7dd3fc;
+  --type-task-soft: rgb(2 132 199 / 0.2);
+  --type-story: #c4b5fd;
+  --type-story-soft: rgb(124 58 237 / 0.22);
+  --type-bug: #fda4af;
+  --type-bug-soft: rgb(225 29 72 / 0.22);
+  --priority-low: #cbd5e1;
+  --priority-low-soft: rgb(100 116 139 / 0.2);
+  --priority-medium: #7dd3fc;
+  --priority-medium-soft: rgb(2 132 199 / 0.2);
+  --priority-high: #fcd34d;
+  --priority-high-soft: rgb(217 119 6 / 0.22);
+  --priority-urgent: #fda4af;
+  --priority-urgent-soft: rgb(225 29 72 / 0.22);
+  --status-todo: #cbd5e1;
+  --status-todo-soft: rgb(100 116 139 / 0.2);
+  --status-in-progress: #7dd3fc;
+  --status-in-progress-soft: rgb(2 132 199 / 0.2);
+  --status-in-review: #c4b5fd;
+  --status-in-review-soft: rgb(124 58 237 / 0.22);
+  --status-done: #86efac;
+  --status-done-soft: rgb(22 163 74 / 0.22);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-active: var(--primary-active);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-hover: var(--secondary-hover);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-hover: var(--destructive-hover);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  --color-error: var(--error);
+  --color-brand-accent: var(--brand-accent);
+  --color-overlay: var(--overlay);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-muted: var(--sidebar-muted);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-hover: var(--sidebar-hover);
+  --color-sidebar-active: var(--sidebar-active);
+  --color-tone: var(--tone);
+  --color-tone-soft: var(--tone-soft);
+  --color-type-task: var(--type-task);
+  --color-type-task-soft: var(--type-task-soft);
+  --color-type-story: var(--type-story);
+  --color-type-story-soft: var(--type-story-soft);
+  --color-type-bug: var(--type-bug);
+  --color-type-bug-soft: var(--type-bug-soft);
+  --color-priority-low: var(--priority-low);
+  --color-priority-low-soft: var(--priority-low-soft);
+  --color-priority-medium: var(--priority-medium);
+  --color-priority-medium-soft: var(--priority-medium-soft);
+  --color-priority-high: var(--priority-high);
+  --color-priority-high-soft: var(--priority-high-soft);
+  --color-priority-urgent: var(--priority-urgent);
+  --color-priority-urgent-soft: var(--priority-urgent-soft);
+  --color-status-todo: var(--status-todo);
+  --color-status-todo-soft: var(--status-todo-soft);
+  --color-status-in-progress: var(--status-in-progress);
+  --color-status-in-progress-soft: var(--status-in-progress-soft);
+  --color-status-in-review: var(--status-in-review);
+  --color-status-in-review-soft: var(--status-in-review-soft);
+  --color-status-done: var(--status-done);
+  --color-status-done-soft: var(--status-done-soft);
+
+  --font-sans: var(--font-body);
+  --font-display: var(--font-display-family);
+}
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    border-color: var(--border);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    min-height: 100svh;
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-body);
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--primary) 22%, transparent);
+  }
+}
+
+/* Brand panel on the auth screens */
+.auth-aside {
+  background:
+    radial-gradient(120% 120% at 100% 0%, color-mix(in oklab, var(--brand-accent) 34%, transparent) 0%, transparent 56%),
+    radial-gradient(90% 90% at 0% 100%, color-mix(in oklab, var(--info) 28%, transparent) 0%, transparent 60%),
+    linear-gradient(155deg, var(--primary-active) 0%, var(--primary) 46%, var(--brand-ink) 100%);
+}
+
+.auth-grid {
+  background-image:
+    linear-gradient(to right, rgb(255 255 255 / 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(255 255 255 / 0.07) 1px, transparent 1px);
+  background-size: 34px 34px;
+  mask-image: radial-gradient(ellipse 85% 75% at 18% 28%, #000 20%, transparent 78%);
+}
+
+.auth-canvas {
+  background:
+    radial-gradient(60% 45% at 100% 0%, color-mix(in oklab, var(--primary) 9%, transparent) 0%, transparent 70%),
+    radial-gradient(50% 40% at 0% 100%, color-mix(in oklab, var(--brand-accent) 8%, transparent) 0%, transparent 70%),
+    var(--background);
+}
+
+/* Deterministic per-project accents. Set by `projectTone()` in the projects feature. */
+.project-tone-indigo {
+  --tone: var(--indigo-600);
+  --tone-soft: var(--indigo-50);
+}
+
+.project-tone-teal {
+  --tone: var(--teal-600);
+  --tone-soft: var(--teal-50);
+}
+
+.project-tone-amber {
+  --tone: var(--amber-600);
+  --tone-soft: var(--amber-50);
+}
+
+.project-tone-rose {
+  --tone: var(--rose-600);
+  --tone-soft: var(--rose-50);
+}
+
+.dark .project-tone-indigo {
+  --tone: #a5b4fc;
+  --tone-soft: color-mix(in oklab, var(--indigo-500) 22%, transparent);
+}
+
+.dark .project-tone-teal {
+  --tone: #5eead4;
+  --tone-soft: color-mix(in oklab, var(--teal-600) 22%, transparent);
+}
+
+.dark .project-tone-amber {
+  --tone: #fcd34d;
+  --tone-soft: color-mix(in oklab, var(--amber-600) 22%, transparent);
+}
+
+.dark .project-tone-rose {
+  --tone: #fda4af;
+  --tone-soft: color-mix(in oklab, var(--rose-600) 22%, transparent);
+}
+
+/* A quiet dotted field behind empty states, like an unstarted board. */
+.dot-grid {
+  background-image: radial-gradient(color-mix(in oklab, var(--muted-foreground) 28%, transparent) 1px, transparent 1px);
+  background-size: 18px 18px;
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes drawer-in {
+  from {
+    opacity: 0.6;
+    transform: translateX(28px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.rise-in {
+  animation: rise-in 420ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
+}
+
+.modal-panel {
+  animation: modal-in 180ms cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+
+.modal-backdrop {
+  animation: fade-in 150ms ease-out;
+}
+
+.drawer-panel {
+  animation: drawer-in 220ms cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rise-in,
+  .modal-panel,
+  .modal-backdrop,
+  .drawer-panel {
+    animation: none;
+  }
+}
