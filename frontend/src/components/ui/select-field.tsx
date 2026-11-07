@@ -1,4 +1,5 @@
 import { useId, type ReactNode, type SelectHTMLAttributes } from 'react';
+import { ChevronDown } from 'lucide-react';
 
 export interface SelectOption {
   value: string;
@@ -18,24 +19,6 @@ export interface SelectFieldProps
   /** Rendered at the bottom-right of the label row. */
   meta?: ReactNode;
   placeholder?: string;
-}
-
-function ChevronIcon() {
-  return (
-    <svg
-      width={16}
-      height={16}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.8}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="m6 9 6 6 6-6" />
-    </svg>
-  );
 }
 
 /** Native select with the same label, error and helper contract as TextField. */
@@ -59,11 +42,11 @@ export function SelectField({
   const describedBy = error ? errorId : helperText ? helperId : undefined;
 
   return (
-    <div className={['flex flex-col gap-2', className ?? ''].filter(Boolean).join(' ')}>
+    <div className={['flex flex-col gap-1.5', className ?? ''].filter(Boolean).join(' ')}>
       {label || meta ? (
         <div className="flex items-baseline justify-between gap-3">
           {label ? (
-            <label className="text-sm font-medium text-foreground" htmlFor={selectId}>
+            <label className="text-xs font-medium text-foreground" htmlFor={selectId}>
               {label}
             </label>
           ) : null}
@@ -75,7 +58,7 @@ export function SelectField({
         <select
           id={selectId}
           className={[
-            'h-10 w-full appearance-none rounded-md border bg-background px-3 pr-9 text-sm text-foreground transition-colors',
+            'h-9 w-full appearance-none rounded-md border bg-background px-2.5 pr-8 text-[13px] text-foreground transition-colors',
             'outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30',
             'disabled:cursor-not-allowed disabled:opacity-50',
             error
@@ -101,17 +84,17 @@ export function SelectField({
             </option>
           ))}
         </select>
-        <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-muted-foreground">
-          <ChevronIcon />
+        <span className="pointer-events-none absolute inset-y-0 right-2.5 flex items-center text-muted-foreground">
+          <ChevronDown size={15} strokeWidth={1.8} aria-hidden="true" />
         </span>
       </div>
 
       {error ? (
-        <p id={errorId} className="text-xs text-error">
+        <p id={errorId} className="text-[11px] text-error">
           {error}
         </p>
       ) : helperText ? (
-        <p id={helperId} className="text-xs text-muted-foreground">
+        <p id={helperId} className="text-[11px] text-muted-foreground">
           {helperText}
         </p>
       ) : null}

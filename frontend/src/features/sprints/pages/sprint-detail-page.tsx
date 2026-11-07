@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useParams } from 'react-router';
+import { motion } from 'framer-motion';
 import { Button } from '../../../components/ui';
 import { ApiError, errorMessage } from '../../../services/client';
 import {
@@ -48,13 +49,13 @@ function DetailStat({
   tone?: boolean;
 }) {
   return (
-    <div className="rounded-xl border border-border bg-card px-4 py-3.5">
+    <div className="rounded-lg border border-border bg-card px-3.5 py-3">
       <p className="text-[10px] font-semibold tracking-[0.1em] text-muted-foreground uppercase">
         {label}
       </p>
       <p
         className={[
-          'mt-1 font-display text-2xl font-semibold tabular-nums',
+          'mt-0.5 font-display text-xl font-semibold tabular-nums',
           tone ? 'text-tone' : 'text-foreground',
         ].join(' ')}
       >
@@ -106,7 +107,12 @@ export function SprintDetailPage() {
       <div className={projectToneClass(project.id)}>
         <ProjectWorkspaceHeader project={project} />
 
-        <main className="px-5 py-8 sm:px-8">
+        <motion.main
+        initial={{ opacity: 0, y: 6 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+        className="px-3 py-4 sm:px-5"
+      >
           <Link
             to={PROJECT_ROUTES.sprints(project.id)}
             className="inline-flex items-center gap-1.5 rounded-md text-xs text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
@@ -117,31 +123,31 @@ export function SprintDetailPage() {
 
           {board.isPending ? (
             <div className="mt-4 space-y-3" aria-hidden="true">
-              <div className="h-40 animate-pulse rounded-2xl border border-border bg-card" />
-              <div className="h-24 animate-pulse rounded-2xl border border-border bg-card" />
-              <div className="h-56 animate-pulse rounded-2xl border border-border bg-card" />
+              <div className="h-32 animate-pulse rounded-lg border border-border bg-card" />
+              <div className="h-20 animate-pulse rounded-lg border border-border bg-card" />
+              <div className="h-40 animate-pulse rounded-lg border border-border bg-card" />
             </div>
           ) : sprintNotFound || (!sprint && !board.error) ? (
-            <div className="mt-4 rounded-2xl border border-border bg-card px-6 py-12 text-center">
-              <h2 className="font-display text-xl font-semibold text-foreground">
+            <div className="mt-4 rounded-lg border border-border bg-card px-6 py-8 text-center">
+              <h2 className="font-display text-lg font-semibold text-foreground">
                 {SPRINT_MESSAGES.detailNotFound}
               </h2>
-              <p className="mx-auto mt-2 max-w-sm text-sm text-muted-foreground">
+              <p className="mx-auto mt-1.5 max-w-sm text-[13px] text-muted-foreground">
                 It may have been deleted, or it belongs to a different project.
               </p>
               <Link
                 to={PROJECT_ROUTES.sprints(project.id)}
-                className="mt-5 inline-flex h-10 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary-hover"
+                className="mt-4 inline-flex h-9 items-center justify-center rounded-md bg-primary px-3.5 text-[13px] font-medium text-primary-foreground transition-colors hover:bg-primary-hover"
               >
                 {SPRINT_MESSAGES.detailBack}
               </Link>
             </div>
           ) : board.error || !sprint || !stats ? (
-            <div className="mt-4 rounded-2xl border border-border bg-card px-6 py-12 text-center">
-              <h2 className="font-display text-xl font-semibold text-foreground">
+            <div className="mt-4 rounded-lg border border-border bg-card px-6 py-8 text-center">
+              <h2 className="font-display text-lg font-semibold text-foreground">
                 Could not load this sprint
               </h2>
-              <p className="mx-auto mt-2 max-w-sm text-sm text-muted-foreground">
+              <p className="mx-auto mt-1.5 max-w-sm text-[13px] text-muted-foreground">
                 {errorMessage(board.error, 'The sprint could not be loaded.')}
               </p>
               <Button
@@ -155,33 +161,33 @@ export function SprintDetailPage() {
             </div>
           ) : (
             <>
-              <section className="mt-4 overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+              <section className="mt-4 overflow-hidden rounded-lg border border-border bg-card shadow-[0_1px_1px_rgba(9,30,66,0.08)]">
                 <div className="h-1 bg-tone" aria-hidden="true" />
-                <div className="flex flex-wrap items-start justify-between gap-4 px-5 pt-5 pb-4 sm:px-6">
+                <div className="flex flex-wrap items-start justify-between gap-3 px-3.5 pt-3 pb-2.5 sm:px-4">
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
-                      <h2 className="font-display text-2xl font-semibold tracking-tight text-foreground">
+                      <h2 className="font-display text-lg font-semibold tracking-tight text-foreground">
                         {sprint.name}
                       </h2>
                       <SprintStatusBadge status={sprint.status} withDot />
                     </div>
 
-                    <p className="mt-1.5 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+                    <p className="mt-1 max-w-2xl text-xs leading-relaxed text-muted-foreground">
                       {sprint.goal || 'No goal was written for this sprint.'}
                     </p>
 
-                    <div className="mt-3 flex flex-wrap items-center gap-2 text-[11px]">
-                      <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-2.5 py-1 text-muted-foreground">
+                    <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[11px]">
+                      <span className="inline-flex items-center gap-1 rounded border border-border bg-background px-2 py-0.5 text-muted-foreground">
                         <CalendarIcon width={12} height={12} />
                         {formatSprintRange(sprint.startDate, sprint.endDate)}
                       </span>
                       {sprint.status === 'active' ? (
-                        <span className="rounded-full bg-tone-soft px-2.5 py-1 font-medium text-tone">
+                        <span className="rounded bg-tone-soft px-2 py-0.5 font-medium text-tone">
                           {daysRemainingLabel(sprint.endDate)}
                         </span>
                       ) : null}
                       {sprint.status === 'completed' && sprint.completedAt ? (
-                        <span className="rounded-full bg-muted px-2.5 py-1 text-muted-foreground">
+                        <span className="rounded bg-muted px-2 py-0.5 text-muted-foreground">
                           Completed {formatSprintDate(sprint.completedAt.slice(0, 10))}
                         </span>
                       ) : null}
@@ -244,9 +250,9 @@ export function SprintDetailPage() {
 
               <section
                 aria-label="Sprint todos"
-                className="mt-3 overflow-hidden rounded-2xl border border-border bg-card shadow-sm"
+                className="mt-3 overflow-hidden rounded-lg border border-border bg-card shadow-[0_1px_1px_rgba(9,30,66,0.08)]"
               >
-                <header className="flex items-center justify-between gap-3 border-b border-border bg-muted/25 px-5 py-3">
+                <header className="flex items-center justify-between gap-3 border-b border-border bg-muted/40 px-3.5 py-2 sm:px-4">
                   <h3 className="font-display text-sm font-semibold text-foreground">Todos</h3>
                   <span className="text-[11px] tabular-nums text-muted-foreground">
                     {stats.totalTodos} {stats.totalTodos === 1 ? 'todo' : 'todos'} · {stats.totalPoints} pts
@@ -267,14 +273,14 @@ export function SprintDetailPage() {
                     {todos.map((todo) => (
                       <li
                         key={todo.id}
-                        className="flex flex-wrap items-center gap-x-3 gap-y-1.5 px-4 py-2.5 sm:px-5"
+                        className="flex flex-wrap items-center gap-x-3 gap-y-1.5 px-3.5 py-2 sm:px-4"
                       >
                         <span className="w-16 shrink-0 font-mono text-[11px] font-semibold tracking-[0.04em] text-muted-foreground">
                           {todo.key}
                         </span>
                         <span
                           className={[
-                            'min-w-0 flex-1 truncate text-sm',
+                            'min-w-0 flex-1 truncate text-[13px]',
                             todo.status === 'done'
                               ? 'text-muted-foreground line-through'
                               : 'text-foreground',
@@ -297,7 +303,7 @@ export function SprintDetailPage() {
               <SprintSummaryPanel projectId={project.id} sprint={sprint} />
             </>
           )}
-        </main>
+        </motion.main>
       </div>
 
       {completeOpen && sprint && sprint.status === 'active' ? (

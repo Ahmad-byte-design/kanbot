@@ -1,5 +1,7 @@
 import { useEffect, useId, useRef, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { X } from 'lucide-react';
 
 const FOCUSABLE =
   'a[href], button:not([disabled]):not([tabindex="-1"]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
@@ -30,6 +32,9 @@ export function Modal({
   const panelRef = useRef<HTMLDivElement>(null);
   const titleId = useId();
   const descriptionId = useId();
+  const reducedMotion = useReducedMotion();
+  // Skip exit animations in tests so a closed dialog leaves the DOM immediately.
+  const animateExit = !reducedMotion && import.meta.env.MODE !== 'test';
 
   // Keep the latest close handler in a ref: passing an inline callback must not
   // re-run the focus/scroll effect on every parent render (e.g. each keystroke).
@@ -88,74 +93,72 @@ export function Modal({
     };
   }, [open]);
 
-  if (!open) return null;
-
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:p-6">
-      <button
-        type="button"
-        tabIndex={-1}
-        aria-label="Close dialog"
-        className="modal-backdrop absolute inset-0 cursor-default bg-overlay backdrop-blur-[2px]"
-        onClick={onClose}
-      />
-      <div
-        ref={panelRef}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby={titleId}
-        aria-describedby={description ? descriptionId : undefined}
-        className={[
-          'modal-panel relative flex max-h-[92svh] w-full flex-col overflow-hidden rounded-t-2xl border border-border bg-card text-card-foreground shadow-2xl sm:rounded-2xl',
-          size === 'sm'
-            ? 'sm:max-w-md'
-            : size === 'lg'
-              ? 'sm:max-w-2xl'
-              : 'sm:max-w-lg',
-        ].join(' ')}
-      >
-        <header className="flex items-start justify-between gap-4 border-b border-border px-6 py-5">
-          <div>
-            <h2 id={titleId} className="font-display text-lg font-semibold tracking-tight text-foreground">
-              {title}
-            </h2>
-            {description ? (
-              <p id={descriptionId} className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
-                {description}
-              </p>
-            ) : null}
-          </div>
-          <button
+    <AnimatePresence>
+      {open ? (
+        <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:p-5">
+          <motion.button
             type="button"
-            className="mt-0.5 grid size-8 shrink-0 place-items-center rounded-md text-muted-foreground outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring"
+            tabIndex={-1}
+            aria-label="Close dialog"
+            className="absolute inset-0 cursor-default bg-overlay backdrop-blur-[2px]"
             onClick={onClose}
-            aria-label="Close"
+            initial={reducedMotion ? false : { opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={animateExit ? { opacity: 0 } : undefined}
+            transition={{ duration: 0.15 }}
+          />
+          <motion.div
+            ref={panelRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={titleId}
+            aria-describedby={description ? descriptionId : undefined}
+            className={[
+              'relative flex max-h-[92svh] w-full flex-col overflow-hidden rounded-t-xl border border-border bg-card text-card-foreground shadow-2xl sm:rounded-xl',
+              size === 'sm'
+                ? 'sm:max-w-sm'
+                : size === 'lg'
+                  ? 'sm:max-w-xl'
+                  : 'sm:max-w-md',
+            ].join(' ')}
+            initial={reducedMotion ? false : { opacity: 0, y: 14, scale: 0.985 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={animateExit ? { opacity: 0, y: 10, scale: 0.99 } : undefined}
+            transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
           >
-            <svg
-              width={16}
-              height={16}
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              <path d="M18 6 6 18M6 6l12 12" />
-            </svg>
-          </button>
-        </header>
+            <header className="flex items-start justify-between gap-3 border-b border-border px-4 py-3">
+              <div className="min-w-0">
+                <h2 id={titleId} className="font-display text-base font-semibold tracking-tight text-foreground">
+                  {title}
+                </h2>
+                {description ? (
+                  <p id={descriptionId} className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
+                    {description}
+                  </p>
+                ) : null}
+              </div>
+              <button
+                type="button"
+                className="grid size-7 shrink-0 cursor-pointer place-items-center rounded-md text-muted-foreground outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring"
+                onClick={onClose}
+                aria-label="Close"
+              >
+                <X size={15} strokeWidth={2.2} aria-hidden="true" />
+              </button>
+            </header>
 
-        <div className="overflow-y-auto px-6 py-5">{children}</div>
+            <div className="overflow-y-auto px-4 py-4">{children}</div>
 
-        {footer ? (
-          <footer className="flex flex-col-reverse gap-2 border-t border-border bg-muted/40 px-6 py-4 sm:flex-row sm:justify-end">
-            {footer}
-          </footer>
-        ) : null}
-      </div>
-    </div>,
+            {footer ? (
+              <footer className="flex flex-col-reverse gap-2 border-t border-border bg-muted/40 px-4 py-3 sm:flex-row sm:justify-end">
+                {footer}
+              </footer>
+            ) : null}
+          </motion.div>
+        </div>
+      ) : null}
+    </AnimatePresence>,
     document.body,
   );
 }

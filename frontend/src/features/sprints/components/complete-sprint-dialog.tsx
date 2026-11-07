@@ -94,7 +94,7 @@ export function CompleteSprintDialog({
         <dl className="grid gap-3 sm:grid-cols-2">
           <div className="rounded-xl border border-status-done/30 bg-status-done-soft/50 px-4 py-3">
             <dt className="text-xs font-medium text-status-done">Done</dt>
-            <dd className="mt-1 font-display text-2xl font-semibold tabular-nums text-foreground">
+            <dd className="mt-0.5 font-display text-xl font-semibold tabular-nums text-foreground">
               {done}
               <span className="ml-1 text-xs font-normal text-muted-foreground">
                 {done === 1 ? 'todo' : 'todos'}
@@ -103,7 +103,7 @@ export function CompleteSprintDialog({
           </div>
           <div className="rounded-xl border border-border bg-muted/50 px-4 py-3">
             <dt className="text-xs font-medium text-muted-foreground">Not done</dt>
-            <dd className="mt-1 font-display text-2xl font-semibold tabular-nums text-foreground">
+            <dd className="mt-0.5 font-display text-xl font-semibold tabular-nums text-foreground">
               {notDone}
               <span className="ml-1 text-xs font-normal text-muted-foreground">
                 {notDone === 1 ? 'todo' : 'todos'}

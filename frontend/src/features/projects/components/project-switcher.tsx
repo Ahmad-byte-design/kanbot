@@ -58,14 +58,14 @@ export function ProjectSwitcher({ current }: ProjectSwitcherProps) {
         aria-expanded={open}
         aria-haspopup="menu"
         aria-controls="project-switcher-menu"
-        className="flex w-full items-center gap-3 rounded-xl border border-sidebar-border bg-sidebar-hover px-2.5 py-2.5 text-left outline-none transition-colors hover:bg-sidebar-active focus-visible:ring-2 focus-visible:ring-white/40"
+        className="flex w-full items-center gap-2 rounded-lg border border-sidebar-border bg-sidebar-hover px-2 py-1.5 text-left outline-none transition-colors hover:bg-sidebar-active focus-visible:ring-2 focus-visible:ring-white/40"
       >
         <ProjectMark projectId={current.id} projectKey={current.key} size="sm" />
         <span className="min-w-0 flex-1">
-          <span className="block truncate text-sm font-medium text-sidebar-foreground">
+          <span className="block truncate text-[13px] font-medium text-sidebar-foreground">
             {current.name}
           </span>
-          <span className="mt-0.5 block text-[11px] tracking-[0.08em] text-sidebar-muted">
+          <span className="mt-0.5 block text-[10px] tracking-[0.08em] text-sidebar-muted">
             {current.key}
           </span>
         </span>
@@ -84,7 +84,7 @@ export function ProjectSwitcher({ current }: ProjectSwitcherProps) {
           id="project-switcher-menu"
           role="menu"
           aria-label="Switch project"
-          className="rise-in absolute inset-x-0 top-full z-40 mt-2 overflow-hidden rounded-xl border border-sidebar-border bg-sidebar shadow-2xl shadow-black/40"
+          className="rise-in absolute inset-x-0 top-full z-40 mt-1.5 overflow-hidden rounded-lg border border-sidebar-border bg-sidebar shadow-2xl shadow-black/40"
         >
           <p className="px-3 pt-3 pb-1.5 text-[11px] font-medium text-sidebar-muted">Switch to</p>
 

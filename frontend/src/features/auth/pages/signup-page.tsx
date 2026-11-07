@@ -74,7 +74,7 @@ export function SignupPage() {
       title={AUTH_MESSAGES.signUpTitle}
       description={AUTH_MESSAGES.signUpDescription}
       footer={
-        <p className="text-center text-sm text-muted-foreground">
+        <p className="text-center text-xs text-muted-foreground">
           Already have an account?{' '}
           <Link className={linkClass} to={signInLink}>
             Sign in
@@ -82,54 +82,59 @@ export function SignupPage() {
         </p>
       }
     >
-      <form className="flex flex-col gap-5" onSubmit={handleSubmit} noValidate>
+      <form className="flex flex-col gap-3" onSubmit={handleSubmit} noValidate>
         {formError ? <Alert variant="error" message={formError} /> : null}
 
-        <TextField
-          id="auth-signup-name"
-          label="Full name"
-          autoComplete="name"
-          placeholder="Ahmad Hasan"
-          value={name}
-          onChange={setName}
-          error={fieldErrors.name}
-          autoFocus
-        />
-        <TextField
-          id="auth-signup-email"
-          label="Email"
-          type="email"
-          autoComplete="email"
-          placeholder="you@example.com"
-          value={email}
-          onChange={setEmail}
-          error={fieldErrors.email}
-        />
-        <PasswordField
-          id="auth-signup-password"
-          label="Password"
-          autoComplete="new-password"
-          placeholder="At least 8 characters"
-          value={password}
-          onChange={setPassword}
-          error={fieldErrors.password}
-          helperText="Use 8 characters or more."
-        />
-        <PasswordField
-          id="auth-signup-confirm-password"
-          label="Confirm password"
-          autoComplete="new-password"
-          placeholder="Repeat your password"
-          value={confirmPassword}
-          onChange={setConfirmPassword}
-          error={fieldErrors.confirmPassword}
-        />
+        <div className="grid gap-3 md:grid-cols-2">
+          <TextField
+            id="auth-signup-name"
+            label="Full name"
+            autoComplete="name"
+            placeholder="Ahmad Hasan"
+            value={name}
+            onChange={setName}
+            error={fieldErrors.name}
+            autoFocus
+          />
+          <TextField
+            id="auth-signup-email"
+            label="Email"
+            type="email"
+            autoComplete="email"
+            placeholder="you@example.com"
+            value={email}
+            onChange={setEmail}
+            error={fieldErrors.email}
+          />
+        </div>
 
-        <Button type="submit" size="lg" fullWidth loading={signup.isPending}>
+        <div className="grid gap-3 md:grid-cols-2">
+          <PasswordField
+            id="auth-signup-password"
+            label="Password"
+            autoComplete="new-password"
+            placeholder="At least 8 characters"
+            value={password}
+            onChange={setPassword}
+            error={fieldErrors.password}
+            helperText="Use 8 characters or more."
+          />
+          <PasswordField
+            id="auth-signup-confirm-password"
+            label="Confirm password"
+            autoComplete="new-password"
+            placeholder="Repeat your password"
+            value={confirmPassword}
+            onChange={setConfirmPassword}
+            error={fieldErrors.confirmPassword}
+          />
+        </div>
+
+        <Button type="submit" fullWidth loading={signup.isPending}>
           {signup.isPending ? 'Creating account…' : 'Create account'}
         </Button>
 
-        <p className="text-center text-xs leading-relaxed text-muted-foreground">
+        <p className="text-center text-[11px] leading-relaxed text-muted-foreground">
           By creating an account you agree to keep your sprint board kind and your standups short.
         </p>
       </form>

@@ -26,14 +26,14 @@ export function SprintHistoryCard({ projectId, sprint }: SprintHistoryCardProps)
     <Link
       to={PROJECT_ROUTES.sprint(projectId, sprint.id)}
       className={[
-        'group grid gap-4 rounded-xl border bg-card p-4 shadow-sm outline-none transition-[border-color,box-shadow]',
-        'hover:border-ring/40 hover:shadow-md focus-visible:ring-2 focus-visible:ring-ring sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center',
+        'group grid gap-3 rounded-lg border bg-card p-3 shadow-[0_1px_1px_rgba(9,30,66,0.08)] outline-none transition-[border-color,box-shadow]',
+        'hover:border-ring/50 hover:shadow-[0_4px_14px_-8px_rgba(9,30,66,0.4)] focus-visible:ring-2 focus-visible:ring-ring sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center',
         active ? 'border-tone/40 ring-1 ring-tone/15' : 'border-border',
       ].join(' ')}
     >
       <div className="min-w-0">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="font-display text-base font-semibold tracking-tight text-foreground">
+          <span className="font-display text-[15px] font-semibold tracking-tight text-foreground">
             {sprint.name}
           </span>
           <SprintStatusBadge status={sprint.status} withDot={active} />

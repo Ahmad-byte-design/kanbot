@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import { useMemo, useState } from 'react';
 import { useParams } from 'react-router';
 import { Alert, Button } from '../../../components/ui';
@@ -8,7 +9,6 @@ import {
   ProjectErrorState,
   ProjectFormDialog,
   ProjectShell,
-  ProjectStats,
   ProjectWorkspaceHeader,
   ProjectWorkspaceSkeleton,
   projectToneClass,
@@ -117,29 +117,40 @@ export function ProjectBacklogPage() {
       <div className={projectToneClass(project.id)}>
         <ProjectWorkspaceHeader
           project={project}
+          showActiveSprint
           actions={
             <>
-              <Button type="button" variant="outline" size="sm" onClick={() => setEditOpen(true)}>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                aria-label="Edit project"
+                onClick={() => setEditOpen(true)}
+              >
                 <PencilIcon width={14} height={14} />
-                Edit project
+                <span className="hidden sm:inline">Edit project</span>
               </Button>
               <Button
                 type="button"
                 variant="ghost"
                 size="sm"
+                aria-label="Delete project"
                 className="text-destructive hover:bg-destructive/10 hover:text-destructive"
                 onClick={() => setDeleteOpen(true)}
               >
                 <TrashIcon width={14} height={14} />
-                Delete
+                <span className="hidden sm:inline">Delete</span>
               </Button>
             </>
           }
         />
 
-        <main className="px-5 py-8 sm:px-8">
-          <ProjectStats stats={project.stats} />
-
+        <motion.main
+        initial={{ opacity: 0, y: 6 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+        className="px-3 py-4 sm:px-5"
+      >
           <PlannedSprints
             projectId={project.id}
             sprints={sprints.data ?? []}
@@ -158,7 +169,7 @@ export function ProjectBacklogPage() {
 
           <section
             aria-label={TODO_MESSAGES.heading}
-            className="mt-6 overflow-hidden rounded-2xl border border-border bg-card shadow-sm"
+            className="mt-4 overflow-hidden rounded-lg border border-border bg-card shadow-[0_1px_1px_rgba(9,30,66,0.08)]"
           >
             <BacklogSummary
               totalCount={todos.length}
@@ -242,7 +253,7 @@ export function ProjectBacklogPage() {
               />
             )}
           </section>
-        </main>
+        </motion.main>
       </div>
 
       {editOpen ? (

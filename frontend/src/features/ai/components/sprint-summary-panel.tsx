@@ -29,7 +29,7 @@ export function SprintSummaryPanel({ projectId, sprint }: SprintSummaryPanelProp
   return (
     <section
       aria-label={AI_MESSAGES.summaryTitle}
-      className="mt-3 overflow-hidden rounded-2xl border border-tone/30 bg-tone-soft/30 shadow-sm"
+      className="mt-3 overflow-hidden rounded-lg border border-tone/30 bg-tone-soft/30 shadow-[0_1px_1px_rgba(9,30,66,0.08)]"
     >
       <header className="flex flex-wrap items-center justify-between gap-2 border-b border-tone/20 px-5 py-3">
         <h3 className="flex items-center gap-2 font-display text-sm font-semibold text-foreground">
@@ -41,7 +41,7 @@ export function SprintSummaryPanel({ projectId, sprint }: SprintSummaryPanelProp
         )}
       </header>
 
-      <div className="px-5 py-4">
+      <div className="px-3.5 py-3 sm:px-4">
         {pending ? (
           <AiSkeleton label={AI_MESSAGES.summaryGenerating} />
         ) : summarize.error ? (

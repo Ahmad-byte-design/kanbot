@@ -71,12 +71,83 @@ export interface MeResponse {
 
 // ───────────────────────────── Projects ─────────────────────────────
 
+/** The board columns a new project starts with. */
+export const DEFAULT_PROJECT_STATUSES = [
+  { id: 'todo', name: 'To do', color: 'slate', done: false, order: 0 },
+  { id: 'in_progress', name: 'In progress', color: 'blue', done: false, order: 1 },
+  { id: 'in_review', name: 'In review', color: 'violet', done: false, order: 2 },
+  { id: 'done', name: 'Done', color: 'green', done: true, order: 3 },
+] as const;
+
+export const STATUS_COLORS = [
+  'slate',
+  'blue',
+  'violet',
+  'green',
+  'amber',
+  'rose',
+  'teal',
+  'indigo',
+] as const;
+
+export type StatusColor = (typeof STATUS_COLORS)[number];
+
+/** One configurable board column, owned by a project. */
+export interface ProjectStatus {
+  /** Stable slug used by todos, e.g. "in_progress" or "testing". */
+  id: string;
+  name: string;
+  color: StatusColor;
+  /** Done statuses count toward progress and set `completedAt`. */
+  done: boolean;
+  order: number;
+}
+
+/** A project background shipped with the server, e.g. `/api/assets/bg-1.jpg`. */
+export interface ProjectBackground {
+  id: string;
+  url: string;
+  name: string;
+}
+
+/** The selectable project icons (rendered by the frontend). */
+export type ProjectIcon =
+  | 'layers'
+  | 'rocket'
+  | 'target'
+  | 'palette'
+  | 'code'
+  | 'book'
+  | 'bug'
+  | 'briefcase'
+  | 'sparkles'
+  | 'box';
+
+export const PROJECT_ICONS: ProjectIcon[] = [
+  'layers',
+  'rocket',
+  'target',
+  'palette',
+  'code',
+  'book',
+  'bug',
+  'briefcase',
+  'sparkles',
+  'box',
+];
+
 export interface Project {
   id: string;
   name: string;
   /** 2–6 uppercase letters, used to build todo keys, e.g. "KAN" → "KAN-12". */
   key: string;
   description: string;
+  /** Background image file id, e.g. "bg-1", or null for no image. */
+  background: string | null;
+  /** Icon key, see PROJECT_ICONS. */
+  icon: ProjectIcon;
+  /** Ordered board columns for this project. */
+  statuses: ProjectStatus[];
   createdAt: string;
   updatedAt: string;
 }

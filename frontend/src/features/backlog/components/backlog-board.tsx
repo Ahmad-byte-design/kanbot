@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import { useMemo, useState } from 'react';
 import type { DragEvent } from 'react';
 import { Alert } from '../../../components/ui';
@@ -112,23 +113,26 @@ export function BacklogBoard({
         </div>
       ) : null}
 
-      <div className="border-t border-border bg-muted/25 p-3 sm:p-4">
+      <div className="border-t border-border bg-board p-2 sm:p-2.5">
         <div
           role="region"
           aria-label={TODO_MESSAGES.boardLabel}
           className="grid grid-flow-col auto-cols-[minmax(16rem,1fr)] gap-3 overflow-x-auto pb-1 lg:grid-flow-row lg:auto-cols-auto lg:grid-cols-4 lg:overflow-visible"
         >
-          {TODO_STATUS_OPTIONS.map(({ value: status, label }) => {
+          {TODO_STATUS_OPTIONS.map(({ value: status, label }, index) => {
             const columnTodos = columns[status];
             const points = columnTodos.reduce((sum, todo) => sum + (todo.storyPoints ?? 0), 0);
             const isDropColumn = Boolean(draggingTodo) && overColumn === status;
 
             return (
-              <section
+              <motion.section
                 key={status}
                 aria-label={`${label} column`}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.22, delay: index * 0.035, ease: [0.22, 1, 0.36, 1] }}
                 className={[
-                  'relative flex min-h-[13rem] flex-col overflow-hidden rounded-xl border bg-background/70 transition-colors',
+                  'relative flex min-h-[11rem] flex-col overflow-hidden rounded-lg border bg-card/60 transition-colors',
                   isDropColumn ? 'border-primary/50 bg-primary/[0.03]' : 'border-border',
                 ].join(' ')}
               >
@@ -137,7 +141,7 @@ export function BacklogBoard({
                   className={['absolute inset-x-0 top-0 h-0.5', TODO_STATUS_DOTS[status]].join(' ')}
                 />
 
-                <header className="flex items-center justify-between gap-2 border-b border-border/80 bg-card/50 px-3 py-2.5">
+                <header className="flex items-center justify-between gap-2 border-b border-border/80 bg-card/70 px-2.5 py-1.5">
                   <div className="flex min-w-0 items-center gap-1.5">
                     <span
                       aria-hidden="true"
@@ -171,7 +175,7 @@ export function BacklogBoard({
                     setOverColumn((current) => (current === status ? null : current));
                   }}
                   onDrop={(event) => handleColumnDrop(event, status)}
-                  className="flex flex-1 flex-col gap-2 p-2"
+                  className="flex flex-1 flex-col gap-1.5 p-1.5"
                 >
                   {columnTodos.map((todo, index) => (
                     <TodoCard
@@ -215,7 +219,7 @@ export function BacklogBoard({
                     </li>
                   ) : null}
                 </ul>
-              </section>
+              </motion.section>
             );
           })}
         </div>

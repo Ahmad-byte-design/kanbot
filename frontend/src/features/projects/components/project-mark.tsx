@@ -8,9 +8,9 @@ interface ProjectMarkProps {
 }
 
 const sizeClasses = {
-  sm: 'size-8 rounded-lg text-[11px]',
-  md: 'size-11 rounded-xl text-xs',
-  lg: 'size-14 rounded-2xl text-sm',
+  sm: 'size-7 rounded-md text-[10px]',
+  md: 'size-10 rounded-lg text-[11px]',
+  lg: 'size-12 rounded-xl text-xs',
 } as const;
 
 /** A project's monogram, tinted with its deterministic accent. */

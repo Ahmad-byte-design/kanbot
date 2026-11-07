@@ -16,9 +16,9 @@ import { ProjectsSkeleton } from '../components/projects-skeleton';
 
 function SummaryCell({ label, value }: { label: string; value: number }) {
   return (
-    <div className="px-4 py-3 sm:px-5">
+    <div className="px-3 py-2.5 sm:px-4">
       <dt className="text-[11px] text-muted-foreground">{label}</dt>
-      <dd className="mt-0.5 font-display text-xl font-semibold tabular-nums text-foreground">
+      <dd className="mt-0.5 font-display text-lg font-semibold tabular-nums text-foreground">
         {value}
       </dd>
     </div>
@@ -42,13 +42,13 @@ export function ProjectsPage() {
   return (
     <div className="min-h-svh bg-background">
       <header className="border-b border-border bg-card/75 backdrop-blur">
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-5 sm:px-8">
+        <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-3 px-4 sm:px-6">
           <Link
             to={PROJECT_ROUTES.list}
-            className="inline-flex items-center gap-2.5 rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="inline-flex items-center gap-2 rounded-md outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
-            <img src="/kanbot-icon.svg" alt="" className="size-9 rounded-xl shadow-md shadow-primary/15" />
-            <span className="font-display text-xl font-semibold tracking-tight text-foreground">
+            <img src="/kanbot-icon.svg" alt="" className="size-8 rounded-lg shadow-sm" />
+            <span className="font-display text-lg font-semibold tracking-tight text-foreground">
               Kanbot
             </span>
           </Link>
@@ -60,30 +60,29 @@ export function ProjectsPage() {
             </div>
             <span
               aria-hidden="true"
-              className="grid size-9 place-items-center rounded-full bg-secondary text-xs font-semibold text-secondary-foreground"
+              className="grid size-8 place-items-center rounded-full bg-secondary text-[11px] font-semibold text-secondary-foreground"
             >
               {accountInitials(user?.name, user?.email)}
             </span>
-            <Button type="button" variant="ghost" size="sm" onClick={logout}>
+            <Button type="button" variant="ghost" size="sm" className="cursor-pointer" onClick={logout}>
               Sign out
             </Button>
           </div>
         </div>
       </header>
 
-      <main className="mx-auto max-w-6xl px-5 py-10 sm:px-8 sm:py-12">
-        <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+      <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-8">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div className="max-w-2xl">
-            <h1 className="font-display text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+            <h1 className="font-display text-2xl font-semibold tracking-tight text-foreground sm:text-[1.75rem]">
               {PROJECT_MESSAGES.listTitle}
             </h1>
-            <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">
+            <p className="mt-1.5 max-w-xl text-[13px] leading-relaxed text-muted-foreground">
               {PROJECT_MESSAGES.listDescription}
             </p>
           </div>
           <Button
             type="button"
-            size="lg"
             className="self-start sm:self-auto"
             onClick={() => setCreateOpen(true)}
           >
@@ -107,19 +106,19 @@ export function ProjectsPage() {
           </div>
         ) : (
           <>
-            <dl className="mt-8 grid grid-cols-3 divide-x divide-border overflow-hidden rounded-xl border border-border bg-card">
+            <dl className="mt-6 grid grid-cols-3 divide-x divide-border overflow-hidden rounded-lg border border-border bg-card">
               <SummaryCell label="Projects" value={list.length} />
               <SummaryCell label="Backlog items" value={backlogTotal} />
               <SummaryCell label="Active sprints" value={activeSprints} />
             </dl>
 
-            <section aria-label="All projects" className="mt-8">
+            <section aria-label="All projects" className="mt-6">
               <div className="flex items-baseline justify-between gap-4">
-                <h2 className="font-display text-sm font-semibold text-foreground">All projects</h2>
+                <h2 className="font-display text-[13px] font-semibold text-foreground">All projects</h2>
                 <p className="text-xs text-muted-foreground">Last updated first</p>
               </div>
 
-              <ul className="mt-3 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+              <ul className="mt-2.5 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
                 {list.map((project) => (
                   <ProjectCard
                     key={project.id}

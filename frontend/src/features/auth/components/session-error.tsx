@@ -7,9 +7,9 @@ interface SessionErrorProps {
 export function SessionError({ message, onRetry, onSignOut }: SessionErrorProps) {
   return (
     <main className="auth-canvas grid min-h-svh place-items-center px-6">
-      <div className="w-full max-w-md rounded-2xl border border-border bg-card p-8 text-center shadow-sm">
+      <div className="w-full max-w-md rounded-lg border border-border bg-card p-6 text-center shadow-sm">
         <img src="/kanbot-icon.svg" alt="" className="mx-auto size-12 rounded-2xl shadow-lg shadow-primary/20" />
-        <h1 className="mt-6 font-display text-2xl font-semibold tracking-tight text-foreground">
+        <h1 className="mt-4 font-display text-xl font-semibold tracking-tight text-foreground">
           We couldn&apos;t reach your workspace
         </h1>
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{message}</p>

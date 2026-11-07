@@ -72,11 +72,11 @@ export function SprintBoardCard({
         onDrop(todo);
       }}
       className={[
-        'group relative cursor-grab rounded-xl border bg-card p-3 shadow-sm transition-[border-color,box-shadow,opacity] duration-150 active:cursor-grabbing',
+        'group relative cursor-grab rounded-md border bg-card p-2.5 shadow-[0_1px_1px_rgba(9,30,66,0.1)] transition-[border-color,box-shadow,opacity] duration-150 active:cursor-grabbing',
         dragging ? 'opacity-40' : '',
         dropTarget
           ? 'border-primary ring-2 ring-primary/20'
-          : 'border-border hover:border-ring/40 hover:shadow-md',
+          : 'border-border hover:border-ring/50 hover:shadow-[0_4px_12px_-6px_rgba(9,30,66,0.35)]',
       ]
         .filter(Boolean)
         .join(' ')}
@@ -119,11 +119,11 @@ export function SprintBoardCard({
       <button
         type="button"
         onClick={() => onOpen(todo)}
-        className="mt-1.5 block w-full rounded-sm text-left outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        className="mt-1 block w-full cursor-pointer rounded-sm text-left outline-none focus-visible:ring-2 focus-visible:ring-ring"
       >
         <span
           className={[
-            'text-sm font-medium leading-snug text-foreground',
+            'text-[13px] font-medium leading-snug text-foreground',
             todo.status === 'done' ? 'text-muted-foreground line-through' : '',
           ].join(' ')}
         >

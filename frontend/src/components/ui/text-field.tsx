@@ -32,9 +32,9 @@ export function TextField({
   const describedBy = error ? errorId : helperText ? helperId : undefined;
 
   return (
-    <div className={['flex flex-col gap-2', className ?? ''].filter(Boolean).join(' ')}>
+    <div className={['flex flex-col gap-1.5', className ?? ''].filter(Boolean).join(' ')}>
       {label ? (
-        <label className="text-sm font-medium text-foreground" htmlFor={inputId}>
+        <label className="text-xs font-medium text-foreground" htmlFor={inputId}>
           {label}
         </label>
       ) : null}
@@ -42,11 +42,11 @@ export function TextField({
         <input
           id={inputId}
           className={[
-            'h-10 w-full rounded-md border bg-background px-3 text-sm text-foreground transition-colors',
+            'h-9 w-full rounded-md border bg-background px-2.5 text-[13px] text-foreground transition-colors',
             'placeholder:text-muted-foreground',
             'outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30',
             'disabled:cursor-not-allowed disabled:opacity-50',
-            endAdornment ? 'pr-10' : '',
+            endAdornment ? 'pr-9' : '',
             error
               ? 'border-error focus-visible:border-error focus-visible:ring-error/30'
               : 'border-input',
@@ -61,15 +61,15 @@ export function TextField({
           {...rest}
         />
         {endAdornment ? (
-          <div className="absolute inset-y-0 right-0 flex items-center pr-3">{endAdornment}</div>
+          <div className="absolute inset-y-0 right-0 flex items-center pr-2.5">{endAdornment}</div>
         ) : null}
       </div>
       {error ? (
-        <p id={errorId} className="text-xs text-error">
+        <p id={errorId} className="text-[11px] text-error">
           {error}
         </p>
       ) : helperText ? (
-        <p id={helperId} className="text-xs text-muted-foreground">
+        <p id={helperId} className="text-[11px] text-muted-foreground">
           {helperText}
         </p>
       ) : null}

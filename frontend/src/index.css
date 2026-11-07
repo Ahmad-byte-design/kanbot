@@ -8,42 +8,51 @@
 :root {
   color-scheme: light;
 
-  /* Primitives */
-  --ink-950: #0b1120;
-  --ink-900: #0f172a;
-  --ink-700: #334155;
-  --ink-500: #64748b;
-  --ink-300: #cbd5e1;
-  --ink-200: #e2e8f0;
-  --ink-100: #f1f5f9;
-  --ink-50: #f8fafc;
-  --indigo-700: #4338ca;
-  --indigo-600: #4f46e5;
-  --indigo-500: #6366f1;
-  --indigo-100: #e0e7ff;
-  --indigo-50: #eef2ff;
-  --green-600: #16a34a;
-  --green-500: #22c55e;
-  --red-600: #dc2626;
-  --red-700: #b91c1c;
-  --sky-600: #0284c7;
-  --amber-500: #f59e0b;
-  --teal-700: #0f766e;
-  --teal-600: #0d9488;
-  --teal-100: #ccfbf1;
-  --teal-50: #f0fdfa;
-  --amber-700: #b45309;
-  --amber-600: #d97706;
-  --amber-100: #fef3c7;
-  --amber-50: #fffbeb;
-  --rose-700: #be123c;
-  --rose-600: #e11d48;
-  --rose-100: #ffe4e6;
-  --rose-50: #fff1f2;
-  --violet-700: #6d28d9;
-  --violet-600: #7c3aed;
-  --violet-100: #ede9fe;
-  --violet-50: #f5f3ff;
+  /*
+   * Jira / Trello-inspired primitives: a confident product blue, a navy
+   * workspace rail and cool neutrals. Density first — this is a tool, not a
+   * marketing page.
+   */
+  --ink-950: #091e42;
+  --ink-900: #172b4d;
+  --ink-700: #42526e;
+  --ink-500: #5e6c84;
+  --ink-300: #c1c7d0;
+  --ink-200: #dfe1e6;
+  --ink-100: #ebecf0;
+  --ink-50: #f4f5f7;
+  --blue-700: #0747a6;
+  --blue-600: #0052cc;
+  --blue-500: #2684ff;
+  --blue-100: #deebff;
+  --blue-50: #e9f2ff;
+  --indigo-700: var(--blue-700);
+  --indigo-600: var(--blue-600);
+  --indigo-500: var(--blue-500);
+  --indigo-100: var(--blue-100);
+  --indigo-50: var(--blue-50);
+  --green-600: #00875a;
+  --green-500: #36b37e;
+  --red-600: #de350b;
+  --red-700: #bf2600;
+  --sky-600: #0052cc;
+  --amber-500: #ffab00;
+  --teal-700: #006644;
+  --teal-600: #00a3bf;
+  --teal-100: #e6fcff;
+  --teal-50: #f0fbfc;
+  --amber-700: #b65c00;
+  --amber-600: #ff8b00;
+  --amber-100: #fffae6;
+  --amber-50: #fffdf5;
+  --rose-700: #bf2600;
+  --rose-600: #de350b;
+  --rose-100: #ffebe6;
+  --rose-50: #fff5f2;
+  --violet-700: #5243aa;
+  --violet-600: #6554c0;
+  --violet-100: #eae6ff;
+  --violet-50: #f4f1ff;
 
   /* Semantic */
   --background: var(--ink-50);
@@ -54,14 +63,14 @@
   --muted-foreground: var(--ink-500);
   --border: var(--ink-200);
   --input: var(--ink-300);
-  --ring: var(--indigo-500);
-  --primary: var(--indigo-600);
-  --primary-hover: var(--indigo-700);
-  --primary-active: #3730a3;
+  --ring: var(--blue-500);
+  --primary: var(--blue-600);
+  --primary-hover: var(--blue-700);
+  --primary-active: #053f8f;
   --primary-foreground: #ffffff;
-  --secondary: var(--indigo-50);
-  --secondary-hover: var(--indigo-100);
-  --secondary-foreground: var(--indigo-700);
+  --secondary: var(--blue-50);
+  --secondary-hover: var(--blue-100);
+  --secondary-foreground: var(--blue-700);
   --accent: var(--ink-100);
   --accent-foreground: var(--ink-900);
   --destructive: var(--red-600);
@@ -69,17 +78,18 @@
   --destructive-foreground: #ffffff;
   --success: var(--green-600);
   --success-foreground: #ffffff;
-  --info: var(--sky-600);
+  --info: var(--blue-600);
   --info-foreground: #ffffff;
   --error: var(--red-600);
 
   /* Brand-adjacent tokens */
-  --brand-accent: var(--green-500);
-  --brand-ink: #1e1b4b;
+  --brand-accent: #36b37e;
+  --brand-ink: #091e42;
+  --board: #eef1f5;
 
   /* Todo metadata tags (type / priority / status) */
   --type-task: var(--sky-600);
-  --type-task-soft: #e0f2fe;
+  --type-task-soft: var(--blue-100);
   --type-story: var(--violet-600);
   --type-story-soft: var(--violet-100);
   --type-bug: var(--rose-600);
@@ -87,7 +97,7 @@
   --priority-low: var(--ink-500);
   --priority-low-soft: var(--ink-100);
   --priority-medium: var(--sky-600);
-  --priority-medium-soft: #e0f2fe;
+  --priority-medium-soft: var(--blue-100);
   --priority-high: var(--amber-700);
   --priority-high-soft: var(--amber-100);
   --priority-urgent: var(--rose-700);
@@ -95,20 +105,20 @@
   --status-todo: var(--ink-500);
   --status-todo-soft: var(--ink-100);
   --status-in-progress: var(--sky-600);
-  --status-in-progress-soft: #e0f2fe;
+  --status-in-progress-soft: var(--blue-100);
   --status-in-review: var(--violet-600);
   --status-in-review-soft: var(--violet-100);
   --status-done: var(--green-600);
-  --status-done-soft: #dcfce7;
+  --status-done-soft: #e3fcef;
 
   /* Workspace chrome */
-  --overlay: rgb(2 6 23 / 0.62);
-  --sidebar: #16123d;
-  --sidebar-foreground: #eceafd;
-  --sidebar-muted: #a8a3cf;
-  --sidebar-border: rgb(255 255 255 / 0.09);
-  --sidebar-hover: rgb(255 255 255 / 0.07);
-  --sidebar-active: rgb(255 255 255 / 0.12);
+  --overlay: rgb(9 30 66 / 0.6);
+  --sidebar: #172b4d;
+  --sidebar-foreground: #f4f5f7;
+  --sidebar-muted: #a5adba;
+  --sidebar-border: rgb(255 255 255 / 0.1);
+  --sidebar-hover: rgb(255 255 255 / 0.08);
+  --sidebar-active: rgb(255 255 255 / 0.14);
 
   /* Per-project accent (overridden by .project-tone-* classes) */
   --tone: var(--primary);
@@ -118,69 +128,70 @@
   --font-body: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-display-family: 'Plus Jakarta Sans', 'Inter', ui-sans-serif, system-ui, sans-serif;
 
-  --radius: 0.75rem;
+  --radius: 0.5rem;
 }
 
 .dark {
   color-scheme: dark;
 
-  --background: var(--ink-950);
-  --foreground: var(--ink-100);
-  --card: var(--ink-900);
-  --card-foreground: var(--ink-100);
-  --muted: #1e293b;
-  --muted-foreground: #94a3b8;
-  --border: #1e293b;
-  --input: #334155;
-  --ring: #818cf8;
-  --primary: var(--indigo-500);
-  --primary-hover: #818cf8;
-  --primary-active: var(--indigo-600);
-  --primary-foreground: #ffffff;
-  --secondary: #1e1b4b;
-  --secondary-hover: #312e81;
-  --secondary-foreground: #c7d2fe;
-  --accent: #1e293b;
-  --accent-foreground: var(--ink-100);
-  --destructive: #f87171;
-  --destructive-hover: #fca5a5;
-  --destructive-foreground: #450a0a;
-  --success: #4ade80;
-  --success-foreground: #052e16;
-  --info: #38bdf8;
-  --info-foreground: #082f49;
-  --error: #f87171;
+  --background: #091e42;
+  --foreground: #f4f5f7;
+  --card: #172b4d;
+  --card-foreground: #f4f5f7;
+  --muted: #253858;
+  --muted-foreground: #a5adba;
+  --border: #253858;
+  --input: #42526e;
+  --ring: #4c9aff;
+  --primary: #4c9aff;
+  --primary-hover: #79b8ff;
+  --primary-active: #2684ff;
+  --primary-foreground: #091e42;
+  --secondary: #1c3d6b;
+  --secondary-hover: #253858;
+  --secondary-foreground: #deebff;
+  --accent: #253858;
+  --accent-foreground: #f4f5f7;
+  --destructive: #ff7452;
+  --destructive-hover: #ff8f73;
+  --destructive-foreground: #091e42;
+  --success: #57d9a3;
+  --success-foreground: #091e42;
+  --info: #4c9aff;
+  --info-foreground: #091e42;
+  --error: #ff7452;
+  --board: #0b1c33;
 
   --overlay: rgb(0 0 0 / 0.72);
-  --sidebar: #100d2c;
-  --sidebar-foreground: var(--ink-100);
-  --sidebar-muted: #9a95c4;
+  --sidebar: #0b1c33;
+  --sidebar-foreground: #f4f5f7;
+  --sidebar-muted: #8fa2bf;
   --sidebar-border: rgb(255 255 255 / 0.08);
   --sidebar-hover: rgb(255 255 255 / 0.06);
   --sidebar-active: rgb(255 255 255 / 0.11);
 
-  --type-task: #7dd3fc;
-  --type-task-soft: rgb(2 132 199 / 0.2);
-  --type-story: #c4b5fd;
-  --type-story-soft: rgb(124 58 237 / 0.22);
-  --type-bug: #fda4af;
-  --type-bug-soft: rgb(225 29 72 / 0.22);
-  --priority-low: #cbd5e1;
-  --priority-low-soft: rgb(100 116 139 / 0.2);
-  --priority-medium: #7dd3fc;
-  --priority-medium-soft: rgb(2 132 199 / 0.2);
-  --priority-high: #fcd34d;
-  --priority-high-soft: rgb(217 119 6 / 0.22);
-  --priority-urgent: #fda4af;
-  --priority-urgent-soft: rgb(225 29 72 / 0.22);
-  --status-todo: #cbd5e1;
-  --status-todo-soft: rgb(100 116 139 / 0.2);
-  --status-in-progress: #7dd3fc;
-  --status-in-progress-soft: rgb(2 132 199 / 0.2);
-  --status-in-review: #c4b5fd;
-  --status-in-review-soft: rgb(124 58 237 / 0.22);
-  --status-done: #86efac;
-  --status-done-soft: rgb(22 163 74 / 0.22);
+  --type-task: #79b8ff;
+  --type-task-soft: rgb(38 132 255 / 0.2);
+  --type-story: #c0b6f2;
+  --type-story-soft: rgb(101 84 192 / 0.24);
+  --type-bug: #ff8f73;
+  --type-bug-soft: rgb(222 53 11 / 0.24);
+  --priority-low: #b3bac5;
+  --priority-low-soft: rgb(94 108 132 / 0.24);
+  --priority-medium: #79b8ff;
+  --priority-medium-soft: rgb(38 132 255 / 0.2);
+  --priority-high: #ffc400;
+  --priority-high-soft: rgb(255 171 0 / 0.2);
+  --priority-urgent: #ff8f73;
+  --priority-urgent-soft: rgb(222 53 11 / 0.24);
+  --status-todo: #b3bac5;
+  --status-todo-soft: rgb(94 108 132 / 0.24);
+  --status-in-progress: #79b8ff;
+  --status-in-progress-soft: rgb(38 132 255 / 0.2);
+  --status-in-review: #c0b6f2;
+  --status-in-review-soft: rgb(101 84 192 / 0.24);
+  --status-done: #57d9a3;
+  --status-done-soft: rgb(0 135 90 / 0.24);
 }
 
 @theme inline {
@@ -212,6 +223,7 @@
   --color-error: var(--error);
   --color-brand-accent: var(--brand-accent);
   --color-overlay: var(--overlay);
+  --color-board: var(--board);
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-muted: var(--sidebar-muted);
@@ -273,27 +285,35 @@
   }
 }
 
-/* Brand panel on the auth screens */
-.auth-aside {
+/* Auth stage: a quiet product-blue canvas with a pointer-following spotlight. */
+.auth-stage {
   background:
-    radial-gradient(120% 120% at 100% 0%, color-mix(in oklab, var(--brand-accent) 34%, transparent) 0%, transparent 56%),
-    radial-gradient(90% 90% at 0% 100%, color-mix(in oklab, var(--info) 28%, transparent) 0%, transparent 60%),
-    linear-gradient(155deg, var(--primary-active) 0%, var(--primary) 46%, var(--brand-ink) 100%);
-}
-
-.auth-grid {
-  background-image:
-    linear-gradient(to right, rgb(255 255 255 / 0.07) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(255 255 255 / 0.07) 1px, transparent 1px);
-  background-size: 34px 34px;
-  mask-image: radial-gradient(ellipse 85% 75% at 18% 28%, #000 20%, transparent 78%);
-}
-
-.auth-canvas {
-  background:
-    radial-gradient(60% 45% at 100% 0%, color-mix(in oklab, var(--primary) 9%, transparent) 0%, transparent 70%),
-    radial-gradient(50% 40% at 0% 100%, color-mix(in oklab, var(--brand-accent) 8%, transparent) 0%, transparent 70%),
+    radial-gradient(80% 60% at 50% -10%, color-mix(in oklab, var(--primary) 10%, transparent) 0%, transparent 65%),
+    radial-gradient(60% 50% at 100% 100%, color-mix(in oklab, var(--brand-accent) 9%, transparent) 0%, transparent 70%),
     var(--background);
+}
+
+.auth-grid-fine {
+  background-image:
+    linear-gradient(to right, color-mix(in oklab, var(--foreground) 5%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--foreground) 5%, transparent) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, #000 10%, transparent 78%);
+}
+
+.auth-orb::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(150deg, rgb(255 255 255 / 0.9), color-mix(in oklab, var(--primary) 35%, transparent) 45%, transparent 70%);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
 }
 
 /* Deterministic per-project accents. Set by `projectTone()` in the projects feature. */

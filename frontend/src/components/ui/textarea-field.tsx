@@ -32,11 +32,11 @@ export function TextareaField({
   const describedBy = error ? errorId : helperText ? helperId : undefined;
 
   return (
-    <div className={['flex flex-col gap-2', className ?? ''].filter(Boolean).join(' ')}>
+    <div className={['flex flex-col gap-1.5', className ?? ''].filter(Boolean).join(' ')}>
       {label || meta ? (
         <div className="flex items-baseline justify-between gap-3">
           {label ? (
-            <label className="text-sm font-medium text-foreground" htmlFor={inputId}>
+            <label className="text-xs font-medium text-foreground" htmlFor={inputId}>
               {label}
             </label>
           ) : null}
@@ -47,7 +47,7 @@ export function TextareaField({
         id={inputId}
         rows={rows}
         className={[
-          'w-full resize-y rounded-md border bg-background px-3 py-2 text-sm text-foreground transition-colors',
+          'w-full resize-y rounded-md border bg-background px-2.5 py-2 text-[13px] text-foreground transition-colors',
           'placeholder:text-muted-foreground',
           'outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30',
           'disabled:cursor-not-allowed disabled:opacity-50',
@@ -64,11 +64,11 @@ export function TextareaField({
         {...rest}
       />
       {error ? (
-        <p id={errorId} className="text-xs text-error">
+        <p id={errorId} className="text-[11px] text-error">
           {error}
         </p>
       ) : helperText ? (
-        <p id={helperId} className="text-xs text-muted-foreground">
+        <p id={helperId} className="text-[11px] text-muted-foreground">
           {helperText}
         </p>
       ) : null}

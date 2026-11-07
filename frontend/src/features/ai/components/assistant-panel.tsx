@@ -37,13 +37,13 @@ function QuickAction({
     <button
       type="button"
       onClick={onClick}
-      className="group flex w-full items-start gap-3 rounded-xl border border-border bg-background px-3 py-2.5 text-left outline-none transition-colors hover:border-tone/40 hover:bg-tone-soft/20 focus-visible:ring-2 focus-visible:ring-ring"
+      className="group flex w-full items-start gap-2.5 rounded-lg border border-border bg-background px-3 py-2 text-left outline-none transition-colors hover:border-tone/40 hover:bg-tone-soft/20 focus-visible:ring-2 focus-visible:ring-ring"
     >
-      <span className="mt-0.5 grid size-7 shrink-0 place-items-center rounded-lg bg-tone-soft text-tone transition-colors group-hover:bg-tone group-hover:text-primary-foreground">
+      <span className="mt-0.5 grid size-6 shrink-0 place-items-center rounded-md bg-tone-soft text-tone transition-colors group-hover:bg-tone group-hover:text-primary-foreground">
         {icon}
       </span>
       <span className="min-w-0">
-        <span className="block text-sm font-medium text-foreground">{label}</span>
+        <span className="block text-[13px] font-medium text-foreground">{label}</span>
         <span className="mt-0.5 block text-[11px] leading-relaxed text-muted-foreground">
           {hint}
         </span>
@@ -166,7 +166,7 @@ export function AssistantPanel({ projectId }: AssistantPanelProps) {
         </span>
       }
       footer={
-        <div className="space-y-2 px-4 py-3">
+        <div className="space-y-2 px-3.5 py-2.5">
           <form onSubmit={handleSubmit} className="flex items-end gap-2">
             <label htmlFor="assistant-composer" className="sr-only">
               {AI_MESSAGES.chatPlaceholder}
@@ -181,12 +181,12 @@ export function AssistantPanel({ projectId }: AssistantPanelProps) {
               maxLength={AI_LIMITS.chatMax}
               disabled={pending}
               data-autofocus
-              className="min-h-[64px] w-full resize-none rounded-xl border border-border bg-background px-3 py-2 text-sm leading-relaxed text-foreground outline-none transition-shadow placeholder:text-muted-foreground/70 focus-visible:border-tone focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60"
+              className="min-h-[56px] w-full resize-none rounded-lg border border-border bg-background px-2.5 py-2 text-[13px] leading-relaxed text-foreground outline-none transition-shadow placeholder:text-muted-foreground/70 focus-visible:border-tone focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60"
             />
             <Button
               type="submit"
               size="sm"
-              className="h-10 shrink-0"
+              className="h-9 shrink-0"
               disabled={!canSend}
               loading={pending}
               aria-label="Send message"
@@ -202,12 +202,12 @@ export function AssistantPanel({ projectId }: AssistantPanelProps) {
         </div>
       }
     >
-      <div className="flex-1 overflow-y-auto px-4 py-4">
+      <div className="flex-1 overflow-y-auto px-3.5 py-3.5">
         {showEmpty ? (
-          <div className="space-y-4">
-            <div className="rounded-xl border border-tone/25 bg-tone-soft/30 px-4 py-3.5">
-              <p className="flex items-center gap-2 font-display text-sm font-semibold text-foreground">
-                <SparklesIcon width={15} height={15} className="text-tone" />
+          <div className="space-y-3">
+            <div className="rounded-lg border border-tone/25 bg-tone-soft/30 px-3.5 py-3">
+              <p className="flex items-center gap-2 font-display text-[13px] font-semibold text-foreground">
+                <SparklesIcon width={14} height={14} className="text-tone" />
                 {AI_MESSAGES.emptyTitle}
               </p>
               <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
@@ -217,19 +217,19 @@ export function AssistantPanel({ projectId }: AssistantPanelProps) {
 
             <div className="space-y-2">
               <QuickAction
-                icon={<SparklesIcon width={15} height={15} />}
+                icon={<SparklesIcon width={14} height={14} />}
                 label={AI_MESSAGES.createTodos}
                 hint={AI_MESSAGES.createTodosHint}
                 onClick={() => openDialog('generate-todos')}
               />
               <QuickAction
-                icon={<SparklesIcon width={15} height={15} />}
+                icon={<SparklesIcon width={14} height={14} />}
                 label={AI_MESSAGES.planSprint}
                 hint={AI_MESSAGES.planSprintHint}
                 onClick={() => openDialog('plan-sprint')}
               />
               <QuickAction
-                icon={<SparklesIcon width={15} height={15} />}
+                icon={<SparklesIcon width={14} height={14} />}
                 label={AI_MESSAGES.summarizeSprint}
                 hint={AI_MESSAGES.summarizeSprintHint}
                 onClick={() => openDialog('summarize')}
@@ -237,7 +237,7 @@ export function AssistantPanel({ projectId }: AssistantPanelProps) {
             </div>
           </div>
         ) : (
-          <ol className="space-y-4" aria-label="Conversation">
+          <ol className="space-y-3.5" aria-label="Conversation">
             {messages.map((message) => (
               <li
                 key={message.id}
@@ -245,14 +245,14 @@ export function AssistantPanel({ projectId }: AssistantPanelProps) {
               >
                 <div
                   className={[
-                    'max-w-[92%] rounded-2xl px-3.5 py-2.5',
+                    'max-w-[92%] rounded-xl px-3 py-2',
                     message.role === 'user'
                       ? 'rounded-br-md bg-primary text-primary-foreground'
                       : 'rounded-bl-md border border-border bg-background text-foreground',
                   ].join(' ')}
                 >
                   {message.role === 'user' ? (
-                    <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                    <p className="text-[13px] leading-relaxed whitespace-pre-wrap">
                       {message.content}
                     </p>
                   ) : (
@@ -274,7 +274,7 @@ export function AssistantPanel({ projectId }: AssistantPanelProps) {
                 <div
                   role="status"
                   aria-live="polite"
-                  className="flex items-center gap-2 rounded-2xl rounded-bl-md border border-border bg-background px-3.5 py-3 text-sm text-muted-foreground"
+                  className="flex items-center gap-2 rounded-xl rounded-bl-md border border-border bg-background px-3 py-2.5 text-[13px] text-muted-foreground"
                 >
                   <span className="flex items-center gap-1" aria-hidden="true">
                     <span className="size-1.5 animate-pulse rounded-full bg-tone [animation-delay:-0.3s]" />

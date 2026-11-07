@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { Link, useParams } from 'react-router';
 import { Alert, Button } from '../../../components/ui';
@@ -65,11 +66,16 @@ export function ProjectBoardPage() {
       <div className={projectToneClass(project.id)}>
         <ProjectWorkspaceHeader project={project} />
 
-        <main className="px-5 py-8 sm:px-8">
+        <motion.main
+        initial={{ opacity: 0, y: 6 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+        className="px-3 py-4 sm:px-5"
+      >
           {sprints.isPending ? (
             <SprintBoardSkeleton />
           ) : sprints.error ? (
-            <div className="rounded-2xl border border-border bg-card px-6 py-10 text-center">
+            <div className="rounded-lg border border-border bg-card px-6 py-8 text-center">
               <h2 className="font-display text-lg font-semibold text-foreground">
                 Could not load the sprint
               </h2>
@@ -90,7 +96,7 @@ export function ProjectBoardPage() {
           ) : board.isPending && !board.data ? (
             <SprintBoardSkeleton />
           ) : boardFailed || !board.data ? (
-            <div className="rounded-2xl border border-border bg-card px-6 py-10 text-center">
+            <div className="rounded-lg border border-border bg-card px-6 py-8 text-center">
               <h2 className="font-display text-lg font-semibold text-foreground">
                 Could not load the board
               </h2>
@@ -103,7 +109,7 @@ export function ProjectBoardPage() {
                 </Button>
                 <Link
                   to={PROJECT_ROUTES.sprints(project.id)}
-                  className="inline-flex h-10 items-center justify-center rounded-md border border-border px-4 text-sm font-medium text-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+                  className="inline-flex h-9 items-center justify-center rounded-md border border-border px-3.5 text-[13px] font-medium text-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
                 >
                   {SPRINT_MESSAGES.pageTitle}
                 </Link>
@@ -135,7 +141,7 @@ export function ProjectBoardPage() {
               />
             </>
           )}
-        </main>
+        </motion.main>
       </div>
 
       {completeOpen && board.data ? (

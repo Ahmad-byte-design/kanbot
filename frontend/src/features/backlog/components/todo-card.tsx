@@ -74,11 +74,11 @@ export function TodoCard({
       }}
       onDrop={handleDrop}
       className={[
-        'group relative rounded-xl border bg-card p-3 shadow-sm transition-[border-color,box-shadow,opacity] duration-150',
+        'group relative cursor-default rounded-md border bg-card p-2.5 shadow-[0_1px_1px_rgba(9,30,66,0.1)] transition-[border-color,box-shadow,opacity] duration-150',
         dragging ? 'opacity-40' : '',
         dropTarget
           ? 'border-primary ring-2 ring-primary/20'
-          : 'border-border hover:border-ring/40 hover:shadow-md',
+          : 'border-border hover:border-ring/50 hover:shadow-[0_4px_12px_-6px_rgba(9,30,66,0.35)]',
       ]
         .filter(Boolean)
         .join(' ')}
@@ -114,7 +114,7 @@ export function TodoCard({
             }}
             onDragEnd={onDragEnd}
             className={[
-              'grid size-7 place-items-center rounded-md text-muted-foreground/70 outline-none transition-colors',
+              'grid size-6 cursor-grab place-items-center rounded text-muted-foreground/70 outline-none transition-colors',
               canReorder
                 ? 'cursor-grab hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring active:cursor-grabbing'
                 : 'cursor-not-allowed opacity-40',
@@ -147,7 +147,7 @@ export function TodoCard({
       >
         <span
           className={[
-            'text-sm font-medium leading-snug text-foreground',
+            'text-[13px] font-medium leading-snug text-foreground',
             todo.status === 'done' ? 'text-muted-foreground line-through' : '',
           ].join(' ')}
         >
@@ -162,7 +162,7 @@ export function TodoCard({
       ) : null}
 
       {todo.labels.length > 0 ? (
-        <div className="mt-2 flex flex-wrap items-center gap-1">
+        <div className="mt-1.5 flex flex-wrap items-center gap-1">
           {visibleLabels.map((label) => (
             <LabelChip key={label} label={label} />
           ))}
@@ -172,7 +172,7 @@ export function TodoCard({
         </div>
       ) : null}
 
-      <div className="mt-2.5 flex items-center justify-between gap-2">
+      <div className="mt-2 flex items-center justify-between gap-2">
         {todo.dueDate ? (
           <span
             className={[

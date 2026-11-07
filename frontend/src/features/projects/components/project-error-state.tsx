@@ -17,11 +17,11 @@ interface ProjectErrorStateProps {
 export function ProjectErrorState({ notFound, message, onRetry }: ProjectErrorStateProps) {
   return (
     <main className="grid min-h-svh place-items-center bg-background px-6 py-12">
-      <div className="w-full max-w-md rounded-2xl border border-border bg-card p-8">
+      <div className="w-full max-w-md rounded-lg border border-border bg-card p-6">
         <p className="text-sm font-medium text-muted-foreground">
           {notFound ? 'Project not found' : 'Could not open this project'}
         </p>
-        <h1 className="mt-2 font-display text-2xl font-semibold tracking-tight text-foreground">
+        <h1 className="mt-2 font-display text-xl font-semibold tracking-tight text-foreground">
           {notFound ? 'This project is no longer here' : 'Something got in the way'}
         </h1>
         <p className="mt-3 text-sm leading-relaxed text-muted-foreground">

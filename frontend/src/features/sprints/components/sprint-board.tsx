@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import { useMemo, useState } from 'react';
 import type { DragEvent } from 'react';
 import { Alert } from '../../../components/ui';
@@ -95,19 +96,22 @@ export function SprintBoard({ projectId, sprintId, board, onOpen }: SprintBoardP
       <div
         role="region"
         aria-label="Sprint board"
-        className="grid grid-flow-col auto-cols-[minmax(16.5rem,1fr)] gap-3 overflow-x-auto pb-2 lg:grid-flow-row lg:auto-cols-auto lg:grid-cols-4 lg:overflow-visible"
+        className="grid grid-flow-col auto-cols-[minmax(15rem,1fr)] gap-2.5 overflow-x-auto pb-2 lg:grid-flow-row lg:auto-cols-auto lg:grid-cols-4 lg:overflow-visible"
       >
-        {TODO_STATUS_OPTIONS.map(({ value: status, label }) => {
+        {TODO_STATUS_OPTIONS.map(({ value: status, label }, index) => {
           const columnTodos = board.columns[status];
           const points = columnTodos.reduce((sum, todo) => sum + (todo.storyPoints ?? 0), 0);
           const isDropColumn = Boolean(dragging) && overColumn === status;
 
           return (
-            <section
+            <motion.section
               key={status}
               aria-label={`${label} column`}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.22, delay: index * 0.035, ease: [0.22, 1, 0.36, 1] }}
               className={[
-                'relative flex min-h-[18rem] flex-col overflow-hidden rounded-xl border bg-muted/20 transition-colors',
+                'relative flex min-h-[15rem] flex-col overflow-hidden rounded-lg border bg-muted/30 transition-colors',
                 isDropColumn ? 'border-primary/50 bg-primary/[0.03]' : 'border-border',
               ].join(' ')}
             >
@@ -116,7 +120,7 @@ export function SprintBoard({ projectId, sprintId, board, onOpen }: SprintBoardP
                 className={['absolute inset-x-0 top-0 h-0.5', TODO_STATUS_DOTS[status]].join(' ')}
               />
 
-              <header className="flex items-center justify-between gap-2 border-b border-border/80 bg-card/60 px-3 py-2.5">
+              <header className="flex items-center justify-between gap-2 border-b border-border/80 bg-card/70 px-2.5 py-1.5">
                 <div className="flex min-w-0 items-center gap-1.5">
                   <span
                     aria-hidden="true"
@@ -150,7 +154,7 @@ export function SprintBoard({ projectId, sprintId, board, onOpen }: SprintBoardP
                   setOverColumn((current) => (current === status ? null : current));
                 }}
                 onDrop={(event) => handleColumnDrop(event, status)}
-                className="flex flex-1 flex-col gap-2 p-2"
+                className="flex flex-1 flex-col gap-1.5 p-1.5"
               >
                 {columnTodos.map((todo, index) => (
                   <SprintBoardCard
@@ -189,7 +193,7 @@ export function SprintBoard({ projectId, sprintId, board, onOpen }: SprintBoardP
                   </li>
                 ) : null}
               </ul>
-            </section>
+            </motion.section>
           );
         })}
       </div>

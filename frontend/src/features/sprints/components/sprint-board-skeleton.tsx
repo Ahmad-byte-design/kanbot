@@ -4,7 +4,7 @@ import { TODO_STATUS_OPTIONS } from '../../backlog/constants/backlog.constants';
 export function SprintBoardSkeleton() {
   return (
     <div aria-hidden="true" className="animate-pulse">
-      <div className="h-44 rounded-2xl border border-border bg-card" />
+      <div className="h-32 rounded-lg border border-border bg-card" />
 
       <div className="mt-4 grid grid-flow-col auto-cols-[minmax(16rem,1fr)] gap-3 overflow-x-auto pb-1 lg:grid-flow-row lg:auto-cols-auto lg:grid-cols-4 lg:overflow-visible">
         {TODO_STATUS_OPTIONS.map(({ value }) => (

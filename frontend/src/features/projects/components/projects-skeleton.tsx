@@ -20,7 +20,7 @@ export function ProjectsSkeleton() {
         {[0, 1, 2, 3, 4, 5].map((card) => (
           <div
             key={card}
-            className="flex h-56 flex-col overflow-hidden rounded-2xl border border-border bg-card"
+            className="flex h-48 flex-col overflow-hidden rounded-lg border border-border bg-card"
           >
             <div className="h-1 bg-muted" />
             <div className="flex flex-1 flex-col p-5">
@@ -66,7 +66,7 @@ export function ProjectWorkspaceSkeleton() {
         <div className="border-b border-border bg-card px-5 py-5 sm:px-8">
           <div className="h-3 w-24 rounded bg-muted" />
           <div className="mt-4 flex items-center gap-4">
-            <div className="size-14 rounded-2xl bg-muted" />
+            <div className="size-11 rounded-lg bg-muted" />
             <div className="space-y-2">
               <div className="h-6 w-48 rounded bg-muted" />
               <div className="h-3 w-64 rounded bg-muted" />
@@ -79,7 +79,7 @@ export function ProjectWorkspaceSkeleton() {
               <div key={cell} className="h-24 rounded-xl border border-border bg-card" />
             ))}
           </div>
-          <div className="h-64 rounded-2xl border border-border bg-card" />
+          <div className="h-52 rounded-lg border border-border bg-card" />
         </div>
       </div>
     </div>

@@ -18,20 +18,20 @@ export function BacklogEmptyState({
   onGenerate,
 }: BacklogEmptyStateProps) {
   return (
-    <div className="dot-grid px-5 py-14 text-center sm:px-8">
+    <div className="dot-grid px-5 py-10 text-center sm:px-8">
       <div className="mx-auto flex max-w-md flex-col items-center">
-        <span className="grid size-12 place-items-center rounded-xl bg-secondary text-secondary-foreground">
-          {filtered ? <SearchIcon width={22} height={22} /> : <BacklogIcon width={22} height={22} />}
+        <span className="grid size-10 place-items-center rounded-lg bg-secondary text-secondary-foreground">
+          {filtered ? <SearchIcon width={19} height={19} /> : <BacklogIcon width={19} height={19} />}
         </span>
 
-        <h3 className="mt-5 font-display text-xl font-semibold tracking-tight text-foreground">
+        <h3 className="mt-4 font-display text-lg font-semibold tracking-tight text-foreground">
           {filtered ? TODO_MESSAGES.filteredEmptyTitle : TODO_MESSAGES.emptyTitle}
         </h3>
-        <p className="mt-2.5 text-sm leading-relaxed text-muted-foreground">
+        <p className="mt-1.5 max-w-sm text-[13px] leading-relaxed text-muted-foreground">
           {filtered ? TODO_MESSAGES.filteredEmptyDescription : TODO_MESSAGES.emptyDescription}
         </p>
 
-        <div className="mt-6 flex flex-col items-center gap-2 sm:flex-row">
+        <div className="mt-5 flex flex-col items-center gap-2 sm:flex-row">
           {filtered ? (
             <Button type="button" onClick={onClearFilters}>
               Clear filters
@@ -44,7 +44,7 @@ export function BacklogEmptyState({
 
           {filtered ? null : (
             <Button type="button" variant="outline" onClick={onGenerate}>
-              <SparklesIcon width={15} height={15} />
+              <SparklesIcon width={14} height={14} />
               Generate with AI
             </Button>
           )}

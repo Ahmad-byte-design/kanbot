@@ -61,12 +61,12 @@ export function BacklogQuickCreate({ projectId, onCreated }: BacklogQuickCreateP
   }
 
   return (
-    <div className="border-b border-border px-3 py-3 sm:px-5">
+    <div className="border-b border-border px-3 py-2.5 sm:px-4">
       <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-2">
         <div className="flex items-start gap-2">
           <div className="relative min-w-0 flex-1">
-            <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-muted-foreground">
-              <PlusIcon width={16} height={16} />
+            <span className="pointer-events-none absolute inset-y-0 left-2.5 flex items-center text-muted-foreground">
+              <PlusIcon width={15} height={15} />
             </span>
             <input
               ref={inputRef}
@@ -90,7 +90,7 @@ export function BacklogQuickCreate({ projectId, onCreated }: BacklogQuickCreateP
               maxLength={TODO_LIMITS.titleMax}
               autoComplete="off"
               className={[
-                'h-10 w-full rounded-md border bg-background pr-3 pl-9 text-sm text-foreground outline-none transition-colors',
+                'h-9 w-full rounded-md border bg-background pr-3 pl-8 text-[13px] text-foreground outline-none transition-colors',
                 'placeholder:text-muted-foreground focus-visible:ring-2',
                 error
                   ? 'border-error focus-visible:border-error focus-visible:ring-error/30'
@@ -104,11 +104,11 @@ export function BacklogQuickCreate({ projectId, onCreated }: BacklogQuickCreateP
         </div>
 
         {error ? (
-          <p id="quick-create-error" role="alert" className="text-xs text-error">
+          <p id="quick-create-error" role="alert" className="text-[11px] text-error">
             {error}
           </p>
         ) : (
-          <p id="quick-create-hint" className="text-xs text-muted-foreground">
+          <p id="quick-create-hint" className="text-[11px] text-muted-foreground">
             {TODO_MESSAGES.quickCreateHint}
           </p>
         )}

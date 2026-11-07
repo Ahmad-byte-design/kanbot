@@ -58,7 +58,7 @@ export function LoginPage() {
       title={AUTH_MESSAGES.signInTitle}
       description={AUTH_MESSAGES.signInDescription}
       footer={
-        <p className="text-center text-sm text-muted-foreground">
+        <p className="text-center text-xs text-muted-foreground">
           New to Kanbot?{' '}
           <Link className={linkClass} to={AUTH_ROUTES.register}>
             Create an account
@@ -66,7 +66,7 @@ export function LoginPage() {
         </p>
       }
     >
-      <form className="flex flex-col gap-5" onSubmit={handleSubmit} noValidate>
+      <form className="flex flex-col gap-3.5" onSubmit={handleSubmit} noValidate>
         {showExpired && !formError ? (
           <Alert variant="info" message={AUTH_MESSAGES.sessionExpired} onClose={() => setShowExpired(false)} />
         ) : null}
@@ -93,11 +93,11 @@ export function LoginPage() {
           error={fieldErrors.password}
         />
 
-        <Button type="submit" size="lg" fullWidth loading={login.isPending}>
+        <Button type="submit" fullWidth loading={login.isPending}>
           {login.isPending ? 'Signing in…' : 'Sign in'}
         </Button>
 
-        <div className="rounded-xl border border-dashed border-border bg-muted/60 p-4 text-center text-xs text-muted-foreground">
+        <div className="rounded-md border border-dashed border-border bg-muted/60 p-3 text-center text-[11px] text-muted-foreground">
           <p className="font-medium text-foreground">Just exploring?</p>
           <p className="mt-1">Use the seeded demo account.</p>
           <button
