@@ -33,7 +33,7 @@ export function useMoveBoardTodo(projectId: string, sprintId: string) {
         const project = queryClient.getQueryData<ProjectListItem>(
           projectKeys.detail(projectId),
         );
-        const doneStatusIds = project?.statuses.filter((s) => s.done).map((s) => s.id);
+        const doneStatusIds = project?.statuses?.filter((s) => s.done).map((s) => s.id);
 
         queryClient.setQueryData<SprintBoardResponse>(
           key,
