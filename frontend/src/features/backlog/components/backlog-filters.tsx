@@ -37,7 +37,7 @@ export function BacklogFilters({
     <div className="border-b border-border">
       <div className="flex flex-col gap-2 px-3 py-2.5 sm:flex-row sm:items-center sm:px-4">
         <div className="relative min-w-0 flex-1">
-          <span className="pointer-events-none absolute inset-y-0 left-2.5 flex items-center text-muted-foreground">
+          <span className="pointer-events-none absolute inset-y-0 start-2.5 flex items-center text-muted-foreground">
             <SearchIcon width={15} height={15} />
           </span>
           <input
@@ -52,14 +52,14 @@ export function BacklogFilters({
             }}
             placeholder="Search key, title, description or label…"
             aria-label="Search backlog"
-            className="h-9 w-full rounded-md border border-input bg-background pr-8 pl-8 text-[13px] text-foreground outline-none transition-colors placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30 [&::-webkit-search-cancel-button]:appearance-none"
+            className="h-9 w-full rounded-md border border-input bg-background pe-8 ps-8 text-[13px] text-foreground outline-none transition-colors placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30 [&::-webkit-search-cancel-button]:appearance-none"
           />
           {filters.search ? (
             <button
               type="button"
               onClick={() => onChange({ search: '' })}
               aria-label="Clear search"
-              className="absolute inset-y-0 right-2 my-auto grid size-6 place-items-center rounded text-muted-foreground outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring"
+              className="absolute inset-y-0 end-2 my-auto grid size-6 place-items-center rounded text-muted-foreground outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring"
             >
               <CloseIcon width={13} height={13} />
             </button>
@@ -97,7 +97,7 @@ export function BacklogFilters({
         <div className="flex flex-wrap items-center gap-x-2 gap-y-1 border-t border-border bg-muted/40 px-3 py-1.5 text-[11px] text-muted-foreground sm:px-4">
           <InfoIcon width={13} height={13} className="shrink-0" />
           <span>{TODO_MESSAGES.dragDisabled}</span>
-          <span className="ml-auto tabular-nums" aria-live="polite">
+          <span className="ms-auto tabular-nums" aria-live="polite">
             Showing {resultCount} of {totalCount}
           </span>
         </div>

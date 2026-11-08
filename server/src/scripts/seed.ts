@@ -8,6 +8,7 @@ import { randomUUID } from 'node:crypto';
 import { db, type Data, type ProjectRecord, type SprintRecord, type TodoRecord } from '../db/store.js';
 import { hashPassword } from '../lib/password.js';
 import { addDays, today } from '../services/board.service.js';
+import { DEFAULT_PROJECT_STATUSES } from '../types/api.js';
 import type { StoryPoints, TodoPriority, TodoStatus, TodoType } from '../types/api.js';
 
 const iso = (date: string) => `${date}T09:00:00.000Z`;
@@ -27,6 +28,15 @@ const project: ProjectRecord = {
   name: 'Kanbot Web App',
   key: 'KAN',
   description: 'Building the Kanbot frontend: auth, backlog, sprint board and the AI assistant.',
+  background: 'bg-6',
+  icon: 'rocket',
+  statuses: [
+    { id: 'todo', name: 'To do', color: 'slate', done: false, order: 0 },
+    { id: 'in_progress', name: 'In progress', color: 'blue', done: false, order: 1 },
+    { id: 'in_review', name: 'In review', color: 'violet', done: false, order: 2 },
+    { id: 'testing', name: 'Testing', color: 'amber', done: false, order: 3 },
+    { id: 'done', name: 'Done', color: 'green', done: true, order: 4 },
+  ],
   nextTodoNumber: 1,
   nextSprintNumber: 4,
   createdAt: iso(addDays(t0, -30)),
@@ -39,6 +49,9 @@ const sideProject: ProjectRecord = {
   name: 'Personal Portfolio',
   key: 'PORT',
   description: 'My portfolio website.',
+  background: 'bg-3',
+  icon: 'palette',
+  statuses: DEFAULT_PROJECT_STATUSES.map((status) => ({ ...status })),
   nextTodoNumber: 1,
   nextSprintNumber: 1,
   createdAt: iso(addDays(t0, -10)),
@@ -142,7 +155,7 @@ add(project, sprint1.id, [
 add(project, sprint2.id, [
   ['Persist the session across reloads', 'task', 'high', 3, 'done', ['auth']], // carried over from Sprint 1
   ['Projects list page', 'story', 'high', 3, 'done'],
-  ['Backlog list with create todo', 'story', 'high', 5, 'in_review', ['backlog']],
+  ['Backlog list with create todo', 'story', 'high', 5, 'testing', ['backlog']],
   ['Todo details modal', 'story', 'medium', 5, 'in_progress'],
   ['Drag and drop between columns', 'story', 'high', 8, 'in_progress', ['board']],
   ['Sprint progress bar', 'task', 'low', 2, 'todo', ['board']],

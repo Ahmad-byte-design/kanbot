@@ -1,11 +1,8 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import type { Todo, TodoStatus } from '../../../types/api';
-import {
-  TODO_STATUS_DOTS,
-  TODO_STATUS_LABELS,
-  TODO_STATUS_OPTIONS,
-} from '../../backlog/constants/backlog.constants';
+import { useProjectStatuses } from '../../projects/context/project-statuses-context';
+import { STATUS_DOT_CLASS } from '../../projects/lib/status-meta';
 import {
   ArrowDownIcon,
   ArrowUpIcon,
@@ -24,7 +21,7 @@ interface SprintBoardCardMenuProps {
 }
 
 const ITEM =
-  'flex w-full items-center gap-2 rounded-md px-2.5 py-1.5 text-left text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent focus-visible:text-accent-foreground disabled:pointer-events-none disabled:opacity-40';
+  'flex w-full items-center gap-2 rounded-md px-2.5 py-1.5 text-start text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent focus-visible:text-accent-foreground disabled:pointer-events-none disabled:opacity-40';
 
 const HEADING =
   'px-2.5 pt-2 pb-1 text-[10px] font-semibold tracking-[0.12em] uppercase text-muted-foreground';
@@ -53,6 +50,7 @@ export function SprintBoardCardMenu({
   onMoveBottom,
   onMoveToStatus,
 }: SprintBoardCardMenuProps) {
+  const statuses = useProjectStatuses();
   const [open, setOpen] = useState(false);
   const [position, setPosition] = useState<MenuPosition | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -132,27 +130,27 @@ export function SprintBoardCardMenu({
       <div className="my-1 border-t border-border" role="separator" />
 
       <p className={HEADING}>Status</p>
-      {TODO_STATUS_OPTIONS.map(({ value }) => {
-        const current = todo.status === value;
+      {statuses.map((status) => {
+        const current = todo.status === status.id;
 
         return (
           <button
-            key={value}
+            key={status.id}
             type="button"
             role="menuitemradio"
             aria-checked={current}
             className={ITEM}
             onClick={() =>
               run(() => {
-                if (!current) onMoveToStatus(todo, value);
+                if (!current) onMoveToStatus(todo, status.id);
               }, true)
             }
           >
             <span
               aria-hidden="true"
-              className={['size-2 shrink-0 rounded-full', TODO_STATUS_DOTS[value]].join(' ')}
+              className={['size-2 shrink-0 rounded-full', STATUS_DOT_CLASS[status.color]].join(' ')}
             />
-            <span className="flex-1 truncate">{TODO_STATUS_LABELS[value]}</span>
+            <span className="flex-1 truncate">{status.name}</span>
             {current ? <CheckIcon width={14} height={14} className="text-tone" /> : null}
           </button>
         );

@@ -37,7 +37,7 @@ function QuickAction({
     <button
       type="button"
       onClick={onClick}
-      className="group flex w-full items-start gap-2.5 rounded-lg border border-border bg-background px-3 py-2 text-left outline-none transition-colors hover:border-tone/40 hover:bg-tone-soft/20 focus-visible:ring-2 focus-visible:ring-ring"
+      className="group flex w-full items-start gap-2.5 rounded-lg border border-border bg-background px-3 py-2 text-start outline-none transition-colors hover:border-tone/40 hover:bg-tone-soft/20 focus-visible:ring-2 focus-visible:ring-ring"
     >
       <span className="mt-0.5 grid size-6 shrink-0 place-items-center rounded-md bg-tone-soft text-tone transition-colors group-hover:bg-tone group-hover:text-primary-foreground">
         {icon}
@@ -247,8 +247,8 @@ export function AssistantPanel({ projectId }: AssistantPanelProps) {
                   className={[
                     'max-w-[92%] rounded-xl px-3 py-2',
                     message.role === 'user'
-                      ? 'rounded-br-md bg-primary text-primary-foreground'
-                      : 'rounded-bl-md border border-border bg-background text-foreground',
+                      ? 'rounded-ee-md bg-primary text-primary-foreground'
+                      : 'rounded-es-md border border-border bg-background text-foreground',
                   ].join(' ')}
                 >
                   {message.role === 'user' ? (
@@ -274,7 +274,7 @@ export function AssistantPanel({ projectId }: AssistantPanelProps) {
                 <div
                   role="status"
                   aria-live="polite"
-                  className="flex items-center gap-2 rounded-xl rounded-bl-md border border-border bg-background px-3 py-2.5 text-[13px] text-muted-foreground"
+                  className="flex items-center gap-2 rounded-xl rounded-es-md border border-border bg-background px-3 py-2.5 text-[13px] text-muted-foreground"
                 >
                   <span className="flex items-center gap-1" aria-hidden="true">
                     <span className="size-1.5 animate-pulse rounded-full bg-tone [animation-delay:-0.3s]" />

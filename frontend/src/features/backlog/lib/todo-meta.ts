@@ -52,14 +52,17 @@ export function dropPosition(todos: Todo[], draggedId: string, overId: string): 
 
 /**
  * Splits the backlog into status columns without re-sorting, so the global
- * backlog order survives inside every column.
+ * backlog order survives inside every column. Pass the project's own status
+ * ids so custom columns get a bucket too.
  */
-export function groupByStatus(todos: Todo[]): Record<TodoStatus, Todo[]> {
-  const columns = Object.fromEntries(
-    TODO_STATUSES.map((status) => [status, [] as Todo[]]),
-  ) as Record<TodoStatus, Todo[]>;
+export function groupByStatus(
+  todos: Todo[],
+  statuses: readonly string[] = TODO_STATUSES,
+): Record<TodoStatus, Todo[]> {
+  const columns: Record<string, Todo[]> = {};
+  for (const status of statuses) columns[status] = [];
 
-  for (const todo of todos) columns[todo.status].push(todo);
+  for (const todo of todos) (columns[todo.status] ??= []).push(todo);
 
   return columns;
 }

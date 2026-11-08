@@ -46,7 +46,7 @@ export function TextField({
             'placeholder:text-muted-foreground',
             'outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30',
             'disabled:cursor-not-allowed disabled:opacity-50',
-            endAdornment ? 'pr-9' : '',
+            endAdornment ? 'pe-9' : '',
             error
               ? 'border-error focus-visible:border-error focus-visible:ring-error/30'
               : 'border-input',
@@ -61,7 +61,7 @@ export function TextField({
           {...rest}
         />
         {endAdornment ? (
-          <div className="absolute inset-y-0 right-0 flex items-center pr-2.5">{endAdornment}</div>
+          <div className="absolute inset-y-0 end-0 flex items-center pe-2.5">{endAdornment}</div>
         ) : null}
       </div>
       {error ? (

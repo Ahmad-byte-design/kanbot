@@ -86,20 +86,27 @@ export function progressPercent(stats: SprintStats): number {
 }
 
 /** Flattens the board back into one list, column order preserved. */
-export function flattenColumns(columns: SprintColumns): Todo[] {
-  return TODO_STATUSES.flatMap((status) => columns[status]);
+export function flattenColumns(
+  columns: SprintColumns,
+  statuses: readonly string[] = TODO_STATUSES,
+): Todo[] {
+  return statuses.flatMap((status) => columns[status] ?? []);
 }
 
-const STATUS_RANK = Object.fromEntries(TODO_STATUSES.map((status, index) => [status, index])) as Record<
-  TodoStatus,
-  number
->;
-
 /** Server order for sprint todos: status column, then `order`. */
-export function sortSprintTodos(todos: Todo[]): Todo[] {
+export function sortSprintTodos(
+  todos: Todo[],
+  statuses: readonly string[] = TODO_STATUSES,
+): Todo[] {
+  const rank: Record<string, number> = {};
+  statuses.forEach((status, index) => {
+    rank[status] = index;
+  });
+  const fallback = statuses.length;
+
   return [...todos].sort(
     (a, b) =>
-      STATUS_RANK[a.status] - STATUS_RANK[b.status] ||
+      (rank[a.status] ?? fallback) - (rank[b.status] ?? fallback) ||
       a.order - b.order ||
       a.createdAt.localeCompare(b.createdAt),
   );
@@ -119,10 +126,10 @@ export function boardDropPosition(
   targetStatus: TodoStatus,
   overId?: string,
 ): number {
-  const sourceStatus = TODO_STATUSES.find((status) =>
-    columns[status].some((todo) => todo.id === draggingId),
+  const sourceStatus = Object.keys(columns).find((status) =>
+    (columns[status] ?? []).some((todo) => todo.id === draggingId),
   );
-  const target = columns[targetStatus];
+  const target = columns[targetStatus] ?? [];
 
   if (!overId) {
     return target.length - (sourceStatus === targetStatus ? 1 : 0);
@@ -134,7 +141,7 @@ export function boardDropPosition(
   const sourceIndex =
     sourceStatus === undefined
       ? -1
-      : columns[sourceStatus].findIndex((todo) => todo.id === draggingId);
+      : (columns[sourceStatus] ?? []).findIndex((todo) => todo.id === draggingId);
 
   if (sourceStatus === targetStatus && sourceIndex >= 0 && sourceIndex < overIndex) {
     return overIndex - 1;

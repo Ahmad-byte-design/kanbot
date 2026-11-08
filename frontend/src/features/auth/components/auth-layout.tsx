@@ -10,6 +10,9 @@ import {
   type MotionValue,
 } from 'framer-motion';
 import { Check, Kanban, Sparkles } from 'lucide-react';
+import { ThemeToggle } from '../../theme';
+import { LocaleSwitcher } from '../../../components/locale-switcher';
+import { useTranslation } from '../../../i18n';
 import { AUTH_ROUTES } from '../constants/auth.constants';
 
 interface AuthLayoutProps {
@@ -19,12 +22,6 @@ interface AuthLayoutProps {
   footer?: ReactNode;
   eyebrow?: string;
 }
-
-const highlights = [
-  'Backlog, sprint and board in one place',
-  'An AI teammate that drafts and plans with you',
-  'A board that stays out of your way',
-];
 
 /** Small floating cards that make the background feel alive. */
 const floatingCards = [
@@ -94,8 +91,10 @@ function FloatingCard({ card, smoothX, smoothY, reducedMotion }: FloatingCardPro
 }
 
 export function AuthLayout({ title, description, children, footer, eyebrow }: AuthLayoutProps) {
+  const { t } = useTranslation();
   const reducedMotion = useReducedMotion();
   const stageRef = useRef<HTMLElement>(null);
+  const highlights = [t('auth.highlight1'), t('auth.highlight2'), t('auth.highlight3')];
 
   // Normalised pointer position, smoothed so the background glides instead of snapping.
   const pointerX = useMotionValue(0.5);
@@ -131,12 +130,12 @@ export function AuthLayout({ title, description, children, footer, eyebrow }: Au
       <div className="auth-grid-fine pointer-events-none absolute inset-0" aria-hidden="true" />
       <motion.div
         aria-hidden="true"
-        className="pointer-events-none absolute -top-40 -right-32 size-[38rem] rounded-full bg-primary/15 blur-3xl"
+        className="pointer-events-none absolute -top-40 -end-32 size-[38rem] rounded-full bg-primary/15 blur-3xl"
         style={reducedMotion ? undefined : { x: driftX, y: driftY }}
       />
       <motion.div
         aria-hidden="true"
-        className="pointer-events-none absolute -bottom-48 -left-40 size-[34rem] rounded-full bg-[color-mix(in_oklab,var(--brand-accent)_18%,transparent)] blur-3xl"
+        className="pointer-events-none absolute -bottom-48 -start-40 size-[34rem] rounded-full bg-[color-mix(in_oklab,var(--brand-accent)_18%,transparent)] blur-3xl"
         style={reducedMotion ? undefined : { x: liftX, y: liftY }}
       />
 
@@ -149,6 +148,11 @@ export function AuthLayout({ title, description, children, footer, eyebrow }: Au
           reducedMotion={reducedMotion}
         />
       ))}
+
+      <div className="absolute top-3 end-3 z-20 flex items-center gap-1 rounded-lg border border-border/70 bg-card/70 p-1 shadow-sm backdrop-blur">
+        <ThemeToggle compact />
+        <LocaleSwitcher compact />
+      </div>
 
       <div className="relative z-10 flex min-h-svh items-center justify-center px-4 py-6 sm:px-6">
         <div className="grid w-full max-w-6xl items-center gap-10 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-8 xl:gap-14">
@@ -166,16 +170,15 @@ export function AuthLayout({ title, description, children, footer, eyebrow }: Au
             <div className="mt-10">
               <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card/80 px-2.5 py-1 text-[11px] font-medium text-muted-foreground backdrop-blur">
                 <span className="size-1.5 rounded-full bg-brand-accent" aria-hidden="true" />
-                Your sprint board with an AI teammate
+                {t('auth.eyebrow')}
               </span>
               <h2 className="mt-5 font-display text-[2.6rem] font-semibold leading-[1.05] tracking-tight text-foreground">
-                Ship the sprint,
+                {t('auth.headlineA')}
                 <br />
-                not the spreadsheet.
+                {t('auth.headlineB')}
               </h2>
               <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">
-                Plan the work, move the cards and let Kanbot handle the summaries. Everything your
-                personal sprint needs, in one quiet place.
+                {t('auth.description')}
               </p>
             </div>
 
@@ -213,7 +216,7 @@ export function AuthLayout({ title, description, children, footer, eyebrow }: Au
               />
               <span
                 aria-hidden="true"
-                className="absolute bottom-[12%] -left-1 hidden size-2 rounded-full bg-brand-accent shadow-[0_0_0_5px_color-mix(in_oklab,var(--brand-accent)_16%,transparent)] md:block"
+                className="absolute bottom-[12%] -start-1 hidden size-2 rounded-full bg-brand-accent shadow-[0_0_0_5px_color-mix(in_oklab,var(--brand-accent)_16%,transparent)] md:block"
               />
 
               <div className="relative w-full md:w-[72%] md:max-w-[22rem]">

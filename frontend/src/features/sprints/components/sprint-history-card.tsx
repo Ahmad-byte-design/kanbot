@@ -94,7 +94,7 @@ export function SprintHistoryCard({ projectId, sprint }: SprintHistoryCardProps)
         </div>
 
         <span className="grid size-8 shrink-0 place-items-center rounded-full border border-border text-muted-foreground transition-colors group-hover:border-ring/40 group-hover:text-foreground">
-          <ArrowRightIcon width={15} height={15} />
+          <ArrowRightIcon width={15} height={15} className="rtl:rotate-180" />
         </span>
       </div>
     </Link>

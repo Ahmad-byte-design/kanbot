@@ -65,7 +65,7 @@ export function BacklogQuickCreate({ projectId, onCreated }: BacklogQuickCreateP
       <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-2">
         <div className="flex items-start gap-2">
           <div className="relative min-w-0 flex-1">
-            <span className="pointer-events-none absolute inset-y-0 left-2.5 flex items-center text-muted-foreground">
+            <span className="pointer-events-none absolute inset-y-0 start-2.5 flex items-center text-muted-foreground">
               <PlusIcon width={15} height={15} />
             </span>
             <input
@@ -90,7 +90,7 @@ export function BacklogQuickCreate({ projectId, onCreated }: BacklogQuickCreateP
               maxLength={TODO_LIMITS.titleMax}
               autoComplete="off"
               className={[
-                'h-9 w-full rounded-md border bg-background pr-3 pl-8 text-[13px] text-foreground outline-none transition-colors',
+                'h-9 w-full rounded-md border bg-background pe-3 ps-8 text-[13px] text-foreground outline-none transition-colors',
                 'placeholder:text-muted-foreground focus-visible:ring-2',
                 error
                   ? 'border-error focus-visible:border-error focus-visible:ring-error/30'

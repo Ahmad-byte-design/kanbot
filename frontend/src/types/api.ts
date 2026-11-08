@@ -71,12 +71,87 @@ export interface MeResponse {
 
 // ───────────────────────────── Projects ─────────────────────────────
 
+/** The board columns a new project starts with. */
+export const DEFAULT_PROJECT_STATUSES: ProjectStatus[] = [
+  { id: 'todo', name: 'To do', color: 'slate', done: false, order: 0 },
+  { id: 'in_progress', name: 'In progress', color: 'blue', done: false, order: 1 },
+  { id: 'in_review', name: 'In review', color: 'violet', done: false, order: 2 },
+  { id: 'done', name: 'Done', color: 'green', done: true, order: 3 },
+];
+
+export const STATUS_COLORS = [
+  'slate',
+  'blue',
+  'violet',
+  'green',
+  'amber',
+  'rose',
+  'teal',
+  'indigo',
+] as const;
+
+export type StatusColor = (typeof STATUS_COLORS)[number];
+
+/** One configurable board column, owned by a project. */
+export interface ProjectStatus {
+  /** Stable slug used by todos, e.g. "in_progress" or "testing". */
+  id: string;
+  name: string;
+  color: StatusColor;
+  /** Done statuses count toward progress and set `completedAt`. */
+  done: boolean;
+  order: number;
+}
+
+/** A project background shipped with the server, e.g. `/api/assets/bg-1.jpg`. */
+export interface ProjectBackground {
+  id: string;
+  url: string;
+  name: string;
+}
+
+/** The selectable project icons (rendered by the frontend). */
+export type ProjectIcon =
+  | 'layers'
+  | 'rocket'
+  | 'target'
+  | 'palette'
+  | 'code'
+  | 'book'
+  | 'bug'
+  | 'briefcase'
+  | 'sparkles'
+  | 'box';
+
+export const PROJECT_ICONS: ProjectIcon[] = [
+  'layers',
+  'rocket',
+  'target',
+  'palette',
+  'code',
+  'book',
+  'bug',
+  'briefcase',
+  'sparkles',
+  'box',
+];
+
 export interface Project {
   id: string;
   name: string;
   /** 2–6 uppercase letters, used to build todo keys, e.g. "KAN" → "KAN-12". */
   key: string;
   description: string;
+  /**
+   * Background image file id, e.g. "bg-1", or null for no image.
+   * Optional in the client only so older fixtures stay valid; the API always
+   * sends it. Normalise with `projectBackground()` / `normalizeStatuses()`.
+   */
+  background?: string | null;
+  /** Icon key, see PROJECT_ICONS. Optional client-side, see `projectIcon()`. */
+  icon?: ProjectIcon;
+  /** Ordered board columns for this project (defaulted client-side). */
+  statuses?: ProjectStatus[];
   createdAt: string;
   updatedAt: string;
 }
@@ -94,15 +169,31 @@ export interface CreateProjectRequest {
   name: string; // 1–80 chars
   key?: string; // 2–6 letters; generated from the name when omitted
   description?: string; // ≤ 500 chars
+  /** Background image id from `ProjectBackground`, or null for no image. */
+  background?: string | null;
+  /** Icon key, see PROJECT_ICONS. */
+  icon?: ProjectIcon;
 }
 
 export type UpdateProjectRequest = Partial<CreateProjectRequest>;
 
+/** POST /projects/:projectId/statuses */
+export interface CreateProjectStatusRequest {
+  name: string; // 1–40 chars
+  color?: StatusColor; // default "slate"
+  done?: boolean; // default false
+  order?: number; // appended when omitted
+}
+
+/** PATCH /projects/:projectId/statuses/:statusId */
+export type UpdateProjectStatusRequest = Partial<CreateProjectStatusRequest>;
+
 // ───────────────────────────── Todos ─────────────────────────────
 
-/** The four board columns, in display order. */
+/** The default status slugs; projects may add or rename their own. */
 export const TODO_STATUSES = ['todo', 'in_progress', 'in_review', 'done'] as const;
-export type TodoStatus = (typeof TODO_STATUSES)[number];
+/** A status id owned by the project (`project.statuses`). */
+export type TodoStatus = string;
 
 export const TODO_PRIORITIES = ['low', 'medium', 'high', 'urgent'] as const;
 export type TodoPriority = (typeof TODO_PRIORITIES)[number];

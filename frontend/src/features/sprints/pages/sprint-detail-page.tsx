@@ -9,6 +9,7 @@ import {
   ProjectShell,
   ProjectWorkspaceHeader,
   ProjectWorkspaceSkeleton,
+  normalizeProjectStatuses,
   projectToneClass,
   useProject,
 } from '../../projects';
@@ -100,7 +101,10 @@ export function SprintDetailPage() {
   const carriedOver = sprint?.completedStats
     ? String(sprint.completedStats.carriedOver)
     : '—';
-  const todos = board.data ? sortSprintTodos(flattenColumns(board.data.columns)) : [];
+  const statusIds = normalizeProjectStatuses(project).map((status) => status.id);
+  const todos = board.data
+    ? sortSprintTodos(flattenColumns(board.data.columns, statusIds), statusIds)
+    : [];
 
   return (
     <ProjectShell project={project}>
@@ -117,7 +121,7 @@ export function SprintDetailPage() {
             to={PROJECT_ROUTES.sprints(project.id)}
             className="inline-flex items-center gap-1.5 rounded-md text-xs text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
           >
-            <ArrowLeftIcon width={14} height={14} />
+            <ArrowLeftIcon width={14} height={14} className="rtl:rotate-180" />
             {SPRINT_MESSAGES.detailBack}
           </Link>
 

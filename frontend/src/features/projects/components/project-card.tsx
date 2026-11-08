@@ -3,6 +3,8 @@ import { motion, useReducedMotion } from 'framer-motion';
 import type { ProjectListItem } from '../types/projects.types';
 import { projectToneClass } from '../lib/project-tone';
 import { PROJECT_ROUTES } from '../constants/projects.constants';
+import { useBackgroundUrl } from '../hooks/use-backgrounds';
+import { projectBackground, projectIcon } from '../lib/status-meta';
 import { ArrowRightIcon, PencilIcon, TrashIcon } from '../../../assets/icons';
 import { ProjectMark } from './project-mark';
 
@@ -19,6 +21,7 @@ interface ProjectCardProps {
 export function ProjectCard({ project, onEdit, onDelete }: ProjectCardProps) {
   const { stats } = project;
   const reducedMotion = useReducedMotion();
+  const background = useBackgroundUrl(projectBackground(project));
 
   return (
     <motion.li
@@ -31,7 +34,17 @@ export function ProjectCard({ project, onEdit, onDelete }: ProjectCardProps) {
         projectToneClass(project.id),
       ].join(' ')}
     >
-      <span aria-hidden="true" className="h-1 shrink-0 bg-tone" />
+      {background ? (
+        <div
+          aria-hidden="true"
+          className="relative h-16 shrink-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${background})` }}
+        >
+          <span className="absolute inset-0 bg-gradient-to-t from-card via-card/20 to-transparent" />
+        </div>
+      ) : (
+        <span aria-hidden="true" className="h-1 shrink-0 bg-tone" />
+      )}
 
       <Link
         to={PROJECT_ROUTES.backlog(project.id)}
@@ -42,7 +55,12 @@ export function ProjectCard({ project, onEdit, onDelete }: ProjectCardProps) {
       <div className="flex flex-1 flex-col p-3.5">
         <div className="flex items-start justify-between gap-2">
           <div className="flex min-w-0 items-center gap-2.5">
-            <ProjectMark projectId={project.id} projectKey={project.key} size="sm" />
+            <ProjectMark
+              projectId={project.id}
+              projectKey={project.key}
+              icon={projectIcon(project)}
+              size="sm"
+            />
             <div className="min-w-0">
               <h3 className="truncate font-display text-[15px] font-semibold tracking-tight text-foreground">
                 {project.name}
@@ -100,7 +118,7 @@ export function ProjectCard({ project, onEdit, onDelete }: ProjectCardProps) {
           </span>
           <span aria-hidden="true" className="inline-flex items-center gap-1 text-[11px] font-semibold text-tone">
             Open
-            <ArrowRightIcon width={12} height={12} className="transition-transform group-hover:translate-x-0.5" />
+            <ArrowRightIcon width={12} height={12} className="transition-transform group-hover:translate-x-0.5 rtl:rotate-180 rtl:group-hover:-translate-x-0.5" />
           </span>
         </div>
       </div>

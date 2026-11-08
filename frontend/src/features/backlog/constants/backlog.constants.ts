@@ -96,6 +96,13 @@ export const TODO_TYPE_STYLES: Record<TodoType, string> = {
   bug: 'bg-type-bug-soft text-type-bug',
 };
 
+/** The tinted backing behind the type icon in a backlog row. */
+export const TODO_TYPE_ICON_STYLES: Record<TodoType, string> = {
+  task: 'bg-type-task-soft text-type-task',
+  story: 'bg-type-story-soft text-type-story',
+  bug: 'bg-type-bug-soft text-type-bug',
+};
+
 export const TODO_PRIORITY_STYLES: Record<TodoPriority, string> = {
   low: 'bg-priority-low-soft text-priority-low',
   medium: 'bg-priority-medium-soft text-priority-medium',

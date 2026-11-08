@@ -97,7 +97,7 @@ export function SprintBoardCard({
           <PriorityTag priority={todo.priority} />
         </div>
 
-        <div className="-mt-1 -mr-1 flex shrink-0 items-center gap-0.5">
+        <div className="-mt-1 -me-1 flex shrink-0 items-center gap-0.5">
           <span
             aria-hidden="true"
             className="grid size-7 place-items-center text-muted-foreground/50 transition-colors group-hover:text-muted-foreground"
@@ -119,7 +119,7 @@ export function SprintBoardCard({
       <button
         type="button"
         onClick={() => onOpen(todo)}
-        className="mt-1 block w-full cursor-pointer rounded-sm text-left outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        className="mt-1 block w-full cursor-pointer rounded-sm text-start outline-none focus-visible:ring-2 focus-visible:ring-ring"
       >
         <span
           className={[

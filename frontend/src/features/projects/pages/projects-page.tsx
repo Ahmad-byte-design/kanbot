@@ -3,7 +3,10 @@ import { Link } from 'react-router';
 import { Alert, Button } from '../../../components/ui';
 import { useAuthSession, useLogout } from '../../auth';
 import { errorMessage } from '../../../services/client';
-import { PROJECT_MESSAGES, PROJECT_ROUTES } from '../constants/projects.constants';
+import { ThemeToggle } from '../../theme';
+import { LocaleSwitcher } from '../../../components/locale-switcher';
+import { useTranslation } from '../../../i18n';
+import { PROJECT_ROUTES } from '../constants/projects.constants';
 import { useProjects } from '../hooks/use-projects';
 import { accountInitials } from '../lib/project-tone';
 import type { ProjectListItem } from '../types/projects.types';
@@ -29,6 +32,7 @@ function SummaryCell({ label, value }: { label: string; value: number }) {
 export function ProjectsPage() {
   const { user } = useAuthSession();
   const logout = useLogout();
+  const { t } = useTranslation();
   const { data: projects, isPending, error, refetch } = useProjects();
 
   const [createOpen, setCreateOpen] = useState(false);
@@ -53,8 +57,10 @@ export function ProjectsPage() {
             </span>
           </Link>
 
-          <div className="flex items-center gap-2 sm:gap-3">
-            <div className="hidden text-right sm:block">
+          <div className="flex items-center gap-1 sm:gap-2">
+            <ThemeToggle compact />
+            <LocaleSwitcher compact />
+            <div className="hidden text-end sm:block">
               <p className="text-sm leading-tight font-medium text-foreground">{user?.name}</p>
               <p className="text-xs text-muted-foreground">{user?.email}</p>
             </div>
@@ -65,7 +71,7 @@ export function ProjectsPage() {
               {accountInitials(user?.name, user?.email)}
             </span>
             <Button type="button" variant="ghost" size="sm" className="cursor-pointer" onClick={logout}>
-              Sign out
+              {t('projects.signOut')}
             </Button>
           </div>
         </div>
@@ -75,10 +81,10 @@ export function ProjectsPage() {
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div className="max-w-2xl">
             <h1 className="font-display text-2xl font-semibold tracking-tight text-foreground sm:text-[1.75rem]">
-              {PROJECT_MESSAGES.listTitle}
+              {t('projects.title')}
             </h1>
             <p className="mt-1.5 max-w-xl text-[13px] leading-relaxed text-muted-foreground">
-              {PROJECT_MESSAGES.listDescription}
+              {t('projects.description')}
             </p>
           </div>
           <Button
@@ -87,7 +93,7 @@ export function ProjectsPage() {
             onClick={() => setCreateOpen(true)}
           >
             <PlusIcon width={17} height={17} />
-            New project
+            {t('projects.newProject')}
           </Button>
         </div>
 
@@ -97,7 +103,7 @@ export function ProjectsPage() {
           <div className="mt-8 max-w-xl">
             <Alert variant="error" message={errorMessage(error)} />
             <Button type="button" variant="outline" className="mt-4" onClick={() => void refetch()}>
-              Try again
+              {t('projects.tryAgain')}
             </Button>
           </div>
         ) : list.length === 0 ? (
@@ -107,15 +113,17 @@ export function ProjectsPage() {
         ) : (
           <>
             <dl className="mt-6 grid grid-cols-3 divide-x divide-border overflow-hidden rounded-lg border border-border bg-card">
-              <SummaryCell label="Projects" value={list.length} />
-              <SummaryCell label="Backlog items" value={backlogTotal} />
-              <SummaryCell label="Active sprints" value={activeSprints} />
+              <SummaryCell label={t('projects.title')} value={list.length} />
+              <SummaryCell label={t('projects.backlogItems')} value={backlogTotal} />
+              <SummaryCell label={t('projects.activeSprints')} value={activeSprints} />
             </dl>
 
-            <section aria-label="All projects" className="mt-6">
+            <section aria-label={t('projects.all')} className="mt-6">
               <div className="flex items-baseline justify-between gap-4">
-                <h2 className="font-display text-[13px] font-semibold text-foreground">All projects</h2>
-                <p className="text-xs text-muted-foreground">Last updated first</p>
+                <h2 className="font-display text-[13px] font-semibold text-foreground">
+                  {t('projects.all')}
+                </h2>
+                <p className="text-xs text-muted-foreground">{t('projects.lastUpdated')}</p>
               </div>
 
               <ul className="mt-2.5 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">

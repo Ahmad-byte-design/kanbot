@@ -2,6 +2,7 @@ import { useEffect, useId, useRef, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { X } from 'lucide-react';
+import { useTranslation } from '../../i18n';
 
 const FOCUSABLE =
   'a[href], button:not([disabled]):not([tabindex="-1"]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
@@ -30,10 +31,13 @@ export function Drawer({
   children,
   footer,
 }: DrawerProps) {
+  const { isRtl } = useTranslation();
   const panelRef = useRef<HTMLDivElement>(null);
   const titleId = useId();
   const descriptionId = useId();
   const reducedMotion = useReducedMotion();
+  const slideFrom = isRtl ? -32 : 32;
+  const slideTo = isRtl ? -28 : 28;
   // Skip exit animations in tests so a closed dialog leaves the DOM immediately.
   const animateExit = !reducedMotion && import.meta.env.MODE !== 'test';
 
@@ -113,10 +117,10 @@ export function Drawer({
             aria-modal="true"
             aria-labelledby={titleId}
             aria-describedby={description ? descriptionId : undefined}
-            className="relative flex h-full w-full max-w-md flex-col border-l border-border bg-card text-card-foreground shadow-2xl"
-            initial={reducedMotion ? false : { x: 32, opacity: 0.6 }}
+            className="relative flex h-full w-full max-w-md flex-col border-s border-border bg-card text-card-foreground shadow-2xl"
+            initial={reducedMotion ? false : { x: slideFrom, opacity: 0.6 }}
             animate={{ x: 0, opacity: 1 }}
-            exit={animateExit ? { x: 28, opacity: 0.6 } : undefined}
+            exit={animateExit ? { x: slideTo, opacity: 0.6 } : undefined}
             transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
           >
             <header className="flex items-start justify-between gap-3 border-b border-border px-4 py-3">

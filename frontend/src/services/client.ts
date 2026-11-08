@@ -5,6 +5,17 @@ const API_URL =
   (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/+$/, '') ||
   'http://localhost:4000/api';
 
+/** The API root, exported for asset URLs that must be absolute. */
+export const API_BASE_URL = API_URL;
+
+/** Turns a server-relative asset path (`/api/assets/bg-1.jpg`) into a full URL. */
+export function assetUrl(path: string | null | undefined): string | null {
+  if (!path) return null;
+  if (/^https?:\/\//i.test(path)) return path;
+  const origin = API_URL.replace(/\/api\/?$/i, '');
+  return `${origin}${path.startsWith('/') ? '' : '/'}${path}`;
+}
+
 export type ApiErrorCode = ErrorCode | 'NETWORK_ERROR';
 
 export interface ApiErrorDetail {

@@ -9,17 +9,20 @@ import {
   assertMovable,
   assertOpenSprint,
   byOrder,
+  defaultStatusId,
   getProject,
   getTodo,
+  hasStatus,
   listOf,
   moveTodo,
   nextOrder,
   now,
   renumber,
+  statusRanks,
   toTodo,
 } from '../services/board.service.js';
+import { badRequest } from '../lib/errors.js';
 import type { BulkCreateTodosResponse, TodoListResponse } from '../types/api.js';
-import { TODO_STATUSES } from '../types/api.js';
 import { createTodoSchema, priority, status, todoType, updateTodoSchema } from './schemas.js';
 
 /** Mounted at /api. */
@@ -27,8 +30,15 @@ export const todosRouter = Router();
 
 type CreateInput = z.infer<typeof createTodoSchema>;
 
+function assertKnownStatus(project: ProjectRecord, statusId: string | undefined) {
+  if (statusId && !hasStatus(project, statusId)) {
+    throw badRequest('Choose a status that exists in this project.', 'status');
+  }
+}
+
 /** Builds a record appended at the end of its list. Call inside db.write. */
 function buildTodo(project: ProjectRecord, input: CreateInput): TodoRecord {
+  const statusId = input.status ?? defaultStatusId(project);
   const todo: TodoRecord = {
     id: randomUUID(),
     projectId: project.id,
@@ -37,7 +47,7 @@ function buildTodo(project: ProjectRecord, input: CreateInput): TodoRecord {
     title: input.title,
     description: input.description,
     type: input.type,
-    status: 'todo',
+    status: statusId,
     priority: input.priority,
     storyPoints: input.storyPoints,
     labels: input.labels,
@@ -47,12 +57,10 @@ function buildTodo(project: ProjectRecord, input: CreateInput): TodoRecord {
     updatedAt: now(),
     completedAt: null,
   };
-  applyStatus(todo, input.status);
+  applyStatus(todo, statusId);
   todo.order = nextOrder(todo);
   return todo;
 }
-
-const STATUS_RANK = Object.fromEntries(TODO_STATUSES.map((s, i) => [s, i])) as Record<string, number>;
 
 const listQuery = z.object({
   sprintId: z.string().optional(),
@@ -66,6 +74,7 @@ todosRouter.get('/projects/:projectId/todos', (req, res) => {
   const project = getProject(currentUser(req).id, req.params.projectId);
   const q = parse(listQuery, req.query);
   const search = q.search?.toLowerCase();
+  const STATUS_RANK = statusRanks(project);
   const todos = db.data.todos
     .filter((t) => t.projectId === project.id)
     .filter((t) => q.sprintId === undefined || t.sprintId === (q.sprintId === 'backlog' ? null : q.sprintId))
@@ -79,7 +88,7 @@ todosRouter.get('/projects/:projectId/todos', (req, res) => {
     )
     .sort((a, b) =>
       a.sprintId === b.sprintId
-        ? (a.sprintId === null ? 0 : STATUS_RANK[a.status]! - STATUS_RANK[b.status]!) || byOrder(a, b)
+        ? (a.sprintId === null ? 0 : (STATUS_RANK[a.status] ?? 99) - (STATUS_RANK[b.status] ?? 99)) || byOrder(a, b)
         : (a.sprintId ?? '').localeCompare(b.sprintId ?? ''),
     );
   res.json({ todos: todos.map(toTodo) } satisfies TodoListResponse);
@@ -89,6 +98,7 @@ todosRouter.post('/projects/:projectId/todos', (req, res) => {
   const project = getProject(currentUser(req).id, req.params.projectId);
   const body = parse(createTodoSchema, req.body);
   assertOpenSprint(project.id, body.sprintId);
+  assertKnownStatus(project, body.status);
   const todo = db.write((d) => {
     const t = buildTodo(project, body);
     d.todos.push(t);
@@ -101,7 +111,10 @@ todosRouter.post('/projects/:projectId/todos', (req, res) => {
 todosRouter.post('/projects/:projectId/todos/bulk', (req, res) => {
   const project = getProject(currentUser(req).id, req.params.projectId);
   const body = parse(z.object({ todos: z.array(createTodoSchema).min(1).max(50) }), req.body);
-  body.todos.forEach((t, i) => assertOpenSprint(project.id, t.sprintId, `todos.${i}.sprintId`));
+  body.todos.forEach((t, i) => {
+    assertOpenSprint(project.id, t.sprintId, `todos.${i}.sprintId`);
+    assertKnownStatus(project, t.status);
+  });
   const todos = db.write((d) => {
     const created = body.todos.map((input) => {
       const t = buildTodo(project, input);
@@ -125,6 +138,7 @@ todosRouter.patch('/todos/:todoId', (req, res) => {
   const sprintChanges = sprintId !== undefined && sprintId !== todo.sprintId;
   if (sprintChanges || (newStatus && newStatus !== todo.status)) assertMovable(todo);
   if (sprintChanges) assertOpenSprint(project.id, sprintId);
+  assertKnownStatus(project, newStatus);
 
   db.write(() => {
     Object.assign(todo, fields, { updatedAt: now() });
@@ -155,6 +169,7 @@ todosRouter.post('/todos/:todoId/move', (req, res) => {
   assertMovable(todo);
   const sprintId = body.sprintId === undefined ? todo.sprintId : body.sprintId;
   if (sprintId !== todo.sprintId) assertOpenSprint(project.id, sprintId);
+  assertKnownStatus(project, body.status);
   db.write(() => {
     moveTodo(todo, { sprintId, status: body.status ?? todo.status, position: body.position });
     project.updatedAt = now();

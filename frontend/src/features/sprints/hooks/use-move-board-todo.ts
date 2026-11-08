@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { todosService } from '../../../services/todos';
 import type { SprintBoardResponse, Todo } from '../../../types/api';
 import { projectKeys } from '../../projects/query-keys';
+import type { ProjectListItem } from '../../projects/types/projects.types';
 import { sprintKeys } from '../query-keys';
 import { moveBoardTodo } from '../lib/sprint-cache';
 import type { MoveBoardTodoInput } from '../types/sprints.types';
@@ -27,9 +28,16 @@ export function useMoveBoardTodo(projectId: string, sprintId: string) {
       const previous = queryClient.getQueryData<SprintBoardResponse>(key);
 
       if (previous) {
+        // The project owns the status list, so custom "done" columns must also
+        // move the optimistic progress bar.
+        const project = queryClient.getQueryData<ProjectListItem>(
+          projectKeys.detail(projectId),
+        );
+        const doneStatusIds = project?.statuses.filter((s) => s.done).map((s) => s.id);
+
         queryClient.setQueryData<SprintBoardResponse>(
           key,
-          moveBoardTodo(previous, todoId, status, position),
+          moveBoardTodo(previous, todoId, status, position, doneStatusIds),
         );
       }
 

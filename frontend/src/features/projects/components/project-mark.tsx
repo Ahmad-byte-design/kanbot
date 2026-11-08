@@ -1,8 +1,11 @@
+import type { ProjectIcon } from '../../../types/api';
 import { projectToneClass } from '../lib/project-tone';
+import { ProjectGlyph } from './project-glyph';
 
 interface ProjectMarkProps {
   projectId: string;
   projectKey: string;
+  icon?: ProjectIcon;
   size?: 'sm' | 'md' | 'lg';
   className?: string;
 }
@@ -17,9 +20,12 @@ const sizeClasses = {
 export function ProjectMark({
   projectId,
   projectKey,
+  icon,
   size = 'md',
   className,
 }: ProjectMarkProps) {
+  const glyphSize = size === 'sm' ? 14 : size === 'md' ? 18 : 21;
+
   return (
     <span
       aria-hidden="true"
@@ -32,7 +38,7 @@ export function ProjectMark({
         .filter(Boolean)
         .join(' ')}
     >
-      {projectKey.slice(0, 3)}
+      {icon ? <ProjectGlyph icon={icon} size={glyphSize} /> : projectKey.slice(0, 3)}
     </span>
   );
 }

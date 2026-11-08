@@ -158,7 +158,7 @@ export function Markdown({ content }: { content: string }) {
       blocks.push(
         <blockquote
           key={`quote-${index}`}
-          className="border-l-2 border-tone/50 pl-3 text-sm text-muted-foreground italic"
+          className="border-s-2 border-tone/50 ps-3 text-sm text-muted-foreground italic"
         >
           {inline(quote.join(' '), `quote-${index}`)}
         </blockquote>,
@@ -183,12 +183,12 @@ export function Markdown({ content }: { content: string }) {
         <ListTag
           key={`list-${index}`}
           className={[
-            'space-y-1 pl-5 text-sm leading-relaxed',
+            'space-y-1 ps-5 text-sm leading-relaxed',
             ordered ? 'list-decimal' : 'list-disc',
           ].join(' ')}
         >
           {items.map((item, itemIndex) => (
-            <li key={`item-${index}-${itemIndex}`} className="pl-0.5">
+            <li key={`item-${index}-${itemIndex}`} className="ps-0.5">
               {inline(item, `item-${index}-${itemIndex}`)}
             </li>
           ))}

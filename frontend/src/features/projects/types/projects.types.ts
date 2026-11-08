@@ -1,4 +1,8 @@
-import type { CreateProjectRequest, ProjectWithStats } from '../../../types/api';
+import type {
+  CreateProjectRequest,
+  ProjectIcon,
+  ProjectWithStats,
+} from '../../../types/api';
 
 /** A project as returned by the list/detail endpoints (counters included). */
 export type ProjectListItem = ProjectWithStats;
@@ -8,6 +12,8 @@ export interface ProjectFormValues {
   name: string;
   key: string;
   description: string;
+  background: string | null;
+  icon: ProjectIcon;
 }
 
 export type ProjectFormMode = 'create' | 'edit';
@@ -22,5 +28,7 @@ export interface UpdateProjectInput {
     name?: string;
     key?: string;
     description?: string;
+    background?: string | null;
+    icon?: ProjectIcon;
   };
 }

@@ -6,6 +6,7 @@ export const PROJECT_ROUTES = {
   sprints: (projectId: string) => `/projects/${projectId}/sprints`,
   sprint: (projectId: string, sprintId: string) =>
     `/projects/${projectId}/sprints/${sprintId}`,
+  statuses: (projectId: string) => `/projects/${projectId}/statuses`,
 } as const;
 
 /** Route patterns for the router (params stay placeholders). */
@@ -15,6 +16,7 @@ export const PROJECT_ROUTE_PATTERNS = {
   board: '/projects/:projectId/board',
   sprints: '/projects/:projectId/sprints',
   sprint: '/projects/:projectId/sprints/:sprintId',
+  statuses: '/projects/:projectId/statuses',
 } as const;
 
 export const PROJECT_LIMITS = {

@@ -40,7 +40,7 @@ export function Alert({ variant, message, title, onClose }: AlertProps) {
       {onClose ? (
         <button
           type="button"
-          className="ml-auto shrink-0 rounded p-0.5 text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+          className="ms-auto shrink-0 rounded p-0.5 text-muted-foreground outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
           onClick={onClose}
           aria-label="Dismiss"
         >

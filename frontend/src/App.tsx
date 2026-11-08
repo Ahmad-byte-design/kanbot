@@ -21,6 +21,7 @@ import {
   PROJECT_ROUTE_PATTERNS,
   ProjectIndexPage,
   ProjectsPage,
+  ProjectStatusesPage,
 } from './features/projects';
 import { ApiError, errorMessage } from './services/client';
 import { NotFoundPage } from './pages/not-found-page';
@@ -86,6 +87,14 @@ function App() {
         element={
           <ProtectedRoute>
             <ProjectBoardPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path={PROJECT_ROUTE_PATTERNS.statuses}
+        element={
+          <ProtectedRoute>
+            <ProjectStatusesPage />
           </ProtectedRoute>
         }
       />

@@ -10,9 +10,11 @@ import {
   addDays,
   getProject,
   getSprint,
+  isDoneStatus,
   listOf,
   moveTodo,
   now,
+  projectStatuses,
   renumber,
   sortSprints,
   statsFor,
@@ -21,7 +23,7 @@ import {
   toSprint,
   toTodo,
 } from '../services/board.service.js';
-import { TODO_STATUSES, type SprintBoardResponse, type SprintListResponse, type Todo, type TodoStatus } from '../types/api.js';
+import type { SprintBoardResponse, SprintListResponse, Todo, TodoStatus } from '../types/api.js';
 import { dateOnly } from './schemas.js';
 
 /** Mounted at /api. */
@@ -96,9 +98,12 @@ sprintsRouter.get('/sprints/:sprintId', (req, res) => {
 
 /** The board: the sprint plus its todos grouped by status column. */
 sprintsRouter.get('/sprints/:sprintId/todos', (req, res) => {
-  const { sprint } = getSprint(currentUser(req).id, req.params.sprintId);
-  const columns = Object.fromEntries(TODO_STATUSES.map((s) => [s, [] as Todo[]])) as Record<TodoStatus, Todo[]>;
-  for (const todo of todosOfSprint(sprint.id)) columns[todo.status].push(toTodo(todo));
+  const { sprint, project } = getSprint(currentUser(req).id, req.params.sprintId);
+  const columns: Record<TodoStatus, Todo[]> = {};
+  for (const status of projectStatuses(project)) columns[status.id] = [];
+  for (const todo of todosOfSprint(sprint.id)) {
+    (columns[todo.status] ??= []).push(toTodo(todo));
+  }
   res.json({ sprint: toSprint(sprint), columns } satisfies SprintBoardResponse);
 });
 
@@ -155,11 +160,13 @@ sprintsRouter.post('/sprints/:sprintId/complete', (req, res) => {
   }
 
   const todos = todosOfSprint(sprint.id);
-  const unfinished = todos.filter((t) => t.status !== 'done');
+  const unfinished = todos.filter((t) => !isDoneStatus(project, t.status));
   db.write(() => {
     sprint.completedStats = { ...statsFor(todos), carriedOver: unfinished.length };
     for (const todo of unfinished) moveTodo(todo, { sprintId: target, status: todo.status, position: Number.MAX_SAFE_INTEGER });
-    renumber(listOf({ projectId: project.id, sprintId: sprint.id, status: 'done' }));
+    for (const status of projectStatuses(project)) {
+      renumber(listOf({ projectId: project.id, sprintId: sprint.id, status: status.id }));
+    }
     Object.assign(sprint, { status: 'completed', completedAt: now(), updatedAt: now() });
     project.updatedAt = now();
   });

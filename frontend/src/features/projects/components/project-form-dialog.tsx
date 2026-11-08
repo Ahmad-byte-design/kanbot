@@ -1,14 +1,20 @@
 import { useState, type FormEvent } from 'react';
 import { useNavigate } from 'react-router';
 import { Alert, Button, Modal, TextField, TextareaField } from '../../../components/ui';
-import { errorMessage, fieldErrors } from '../../../services/client';
-import { PROJECT_LIMITS, PROJECT_MESSAGES, PROJECT_ROUTES } from '../constants/projects.constants';
+import { assetUrl, errorMessage, fieldErrors } from '../../../services/client';
+import { PROJECT_ICONS, type ProjectIcon } from '../../../types/api';
+import { useTranslation } from '../../../i18n';
+import { PROJECT_LIMITS, PROJECT_ROUTES } from '../constants/projects.constants';
+import { useBackgrounds } from '../hooks/use-backgrounds';
 import { useCreateProject } from '../hooks/use-create-project';
 import { useUpdateProject } from '../hooks/use-update-project';
 import { zodFieldErrors } from '../../../lib/zod-field-errors';
+import { projectIcon, projectBackground } from '../lib/status-meta';
 import { suggestProjectKey } from '../lib/project-tone';
 import { createProjectSchema, updateProjectSchema } from '../schema/project.schema';
 import type { ProjectFormMode, ProjectListItem } from '../types/projects.types';
+import { CheckIcon } from '../../../assets/icons';
+import { ProjectGlyph } from './project-glyph';
 
 interface ProjectFormDialogProps {
   mode: ProjectFormMode;
@@ -26,11 +32,15 @@ export function ProjectFormDialog({ mode, project, onClose }: ProjectFormDialogP
   const navigate = useNavigate();
   const createProject = useCreateProject();
   const updateProject = useUpdateProject();
+  const { t } = useTranslation();
+  const backgrounds = useBackgrounds();
 
   const [values, setValues] = useState({
     name: mode === 'edit' ? (project?.name ?? '') : '',
     key: mode === 'edit' ? (project?.key ?? '') : '',
     description: mode === 'edit' ? (project?.description ?? '') : '',
+    background: mode === 'edit' ? projectBackground(project) : null,
+    icon: mode === 'edit' ? projectIcon(project) : ('layers' as ProjectIcon),
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -40,10 +50,10 @@ export function ProjectFormDialog({ mode, project, onClose }: ProjectFormDialogP
   const suggestion = suggestProjectKey(values.name);
 
   const keyHelper = isEdit
-    ? PROJECT_MESSAGES.keyHintEdit
+    ? t('projectForm.keyHintEdit')
     : values.key === ''
       ? `Leave blank — Kanbot will use ${suggestion}.`
-      : PROJECT_MESSAGES.keyHintCreate;
+      : t('projectForm.keyHintCreate');
 
   const close = () => {
     if (!pending) onClose();
@@ -91,6 +101,8 @@ export function ProjectFormDialog({ mode, project, onClose }: ProjectFormDialogP
         name: parsed.data.name,
         key: parsed.data.key || undefined,
         description: parsed.data.description,
+        background: parsed.data.background ?? null,
+        icon: parsed.data.icon,
       });
 
       onClose();
@@ -108,19 +120,17 @@ export function ProjectFormDialog({ mode, project, onClose }: ProjectFormDialogP
     <Modal
       open
       onClose={close}
-      title={isEdit ? 'Edit project' : 'Create a project'}
+      title={isEdit ? t('projectForm.editTitle') : t('projectForm.createTitle')}
       description={
-        isEdit
-          ? 'Update the name, key or description. The project keeps all of its work.'
-          : 'A project holds one backlog, its sprints and todos.'
+        isEdit ? t('projectForm.editDescription') : t('projectForm.createDescription')
       }
       footer={
         <>
           <Button type="button" variant="ghost" onClick={close} disabled={pending}>
-            Cancel
+            {t('common.cancel')}
           </Button>
           <Button type="submit" form="project-form" loading={pending}>
-            {isEdit ? 'Save changes' : 'Create project'}
+            {isEdit ? t('common.save') : t('projectForm.create')}
           </Button>
         </>
       }
@@ -129,10 +139,10 @@ export function ProjectFormDialog({ mode, project, onClose }: ProjectFormDialogP
         {submitError ? <Alert variant="error" message={submitError} /> : null}
 
         <TextField
-          label="Project name"
+          label={t('projectForm.name')}
           value={values.name}
           onChange={updateField('name')}
-          placeholder="Mobile app redesign"
+          placeholder={t('projectForm.namePlaceholder')}
           error={errors.name}
           maxLength={PROJECT_LIMITS.nameMax}
           disabled={pending}
@@ -141,7 +151,7 @@ export function ProjectFormDialog({ mode, project, onClose }: ProjectFormDialogP
         />
 
         <TextField
-          label="Key"
+          label={t('projectForm.key')}
           value={values.key}
           onChange={handleKeyChange}
           placeholder={suggestion}
@@ -156,16 +166,96 @@ export function ProjectFormDialog({ mode, project, onClose }: ProjectFormDialogP
         />
 
         <TextareaField
-          label="Description"
+          label={t('projectForm.description')}
           value={values.description}
           onChange={updateField('description')}
-          placeholder="What is this project for?"
+          placeholder={t('projectForm.descriptionPlaceholder')}
           error={errors.description}
           meta={`${values.description.length}/${PROJECT_LIMITS.descriptionMax}`}
           maxLength={PROJECT_LIMITS.descriptionMax}
           rows={3}
           disabled={pending}
         />
+
+        <fieldset className="flex flex-col gap-2" disabled={pending}>
+          <legend className="text-[13px] font-medium text-foreground">{t('projectForm.background')}</legend>
+          <p className="text-xs text-muted-foreground">{t('projectForm.backgroundHint')}</p>
+          <div role="radiogroup" aria-label={t('projectForm.background')} className="grid grid-cols-3 gap-2 sm:grid-cols-4">
+            <button
+              type="button"
+              role="radio"
+              aria-checked={values.background === null}
+              aria-label={t('projectForm.noBackground')}
+              onClick={() => setValues((current) => ({ ...current, background: null }))}
+              className={[
+                'relative grid h-16 place-items-center rounded-lg border bg-muted/40 text-[10px] font-medium text-muted-foreground outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring',
+                values.background === null ? 'border-primary ring-2 ring-primary/25' : 'border-border hover:border-ring/60',
+              ].join(' ')}
+            >
+              {t('projectForm.noBackground')}
+              {values.background === null ? <CheckIcon width={14} height={14} className="absolute top-1 end-1 text-primary" /> : null}
+            </button>
+            {(backgrounds.data ?? []).map((background) => {
+              const src = assetUrl(background.url);
+              const active = values.background === background.id;
+              return (
+                <button
+                  key={background.id}
+                  type="button"
+                  role="radio"
+                  aria-checked={active}
+                  aria-label={background.name}
+                  onClick={() => setValues((current) => ({ ...current, background: background.id }))}
+                  className={[
+                    'relative h-16 overflow-hidden rounded-lg border bg-cover bg-center outline-none transition-[border-color,box-shadow] focus-visible:ring-2 focus-visible:ring-ring',
+                    active ? 'border-primary ring-2 ring-primary/25' : 'border-border hover:border-ring/60',
+                  ].join(' ')}
+                  style={src ? { backgroundImage: `url(${src})` } : undefined}
+                >
+                  {active ? (
+                    <span className="absolute top-1 end-1 grid size-5 place-items-center rounded-full bg-primary text-primary-foreground shadow">
+                      <CheckIcon width={12} height={12} />
+                    </span>
+                  ) : null}
+                </button>
+              );
+            })}
+            {backgrounds.isPending ? (
+              <span className="grid h-16 place-items-center rounded-lg border border-dashed border-border text-[10px] text-muted-foreground">
+                {t('common.loading')}
+              </span>
+            ) : null}
+          </div>
+        </fieldset>
+
+        <fieldset className="flex flex-col gap-2" disabled={pending}>
+          <legend className="text-[13px] font-medium text-foreground">{t('projectForm.icon')}</legend>
+          <p className="text-xs text-muted-foreground">{t('projectForm.iconHint')}</p>
+          <div role="radiogroup" aria-label={t('projectForm.icon')} className="flex flex-wrap gap-2">
+            {PROJECT_ICONS.map((icon) => {
+              const active = values.icon === icon;
+              return (
+                <button
+                  key={icon}
+                  type="button"
+                  role="radio"
+                  aria-checked={active}
+                  aria-label={icon}
+                  title={icon}
+                  onClick={() => setValues((current) => ({ ...current, icon }))}
+                  className={[
+                    'grid size-10 place-items-center rounded-lg border outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring',
+                    active
+                      ? 'border-primary bg-primary/10 text-primary ring-2 ring-primary/25'
+                      : 'border-border bg-card text-muted-foreground hover:border-ring/60 hover:text-foreground',
+                  ].join(' ')}
+                >
+                  <ProjectGlyph icon={icon} />
+                </button>
+              );
+            })}
+          </div>
+        </fieldset>
       </form>
     </Modal>
   );

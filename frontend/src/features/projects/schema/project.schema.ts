@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { PROJECT_ICONS } from '../../../types/api';
 import { PROJECT_LIMITS } from '../constants/projects.constants';
 
 /**
@@ -33,16 +34,23 @@ const descriptionSchema = z
     `Keep the description under ${PROJECT_LIMITS.descriptionMax} characters`,
   );
 
+const backgroundSchema = z.string().nullable().optional();
+const iconSchema = z.enum(PROJECT_ICONS).optional();
+
 export const createProjectSchema = z.object({
   name: nameSchema,
   key: optionalProjectKeySchema,
   description: descriptionSchema,
+  background: backgroundSchema,
+  icon: iconSchema,
 });
 
 export const updateProjectSchema = z.object({
   name: nameSchema,
   key: projectKeySchema,
   description: descriptionSchema,
+  background: backgroundSchema,
+  icon: iconSchema,
 });
 
 export type CreateProjectSchema = z.infer<typeof createProjectSchema>;

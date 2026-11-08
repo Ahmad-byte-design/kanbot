@@ -6,6 +6,7 @@ import { requireAuth } from './middleware/auth.js';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
 import { requestLogger } from './middleware/requestLogger.js';
 import { aiRouter } from './routes/ai.routes.js';
+import { assetsRouter } from './routes/assets.routes.js';
 import { authRouter } from './routes/auth.routes.js';
 import { projectsRouter } from './routes/projects.routes.js';
 import { sprintsRouter } from './routes/sprints.routes.js';
@@ -24,6 +25,8 @@ export function createApp() {
     res.json({ status: 'ok', version: '1.0.0', time: new Date().toISOString() } satisfies HealthResponse);
   });
 
+  // Public: background images are loaded by <img> tags without a bearer token.
+  app.use('/api/assets', assetsRouter);
   app.use('/api/auth', authRouter);
   app.use('/api/projects', requireAuth, projectsRouter);
   app.use('/api', requireAuth, todosRouter, sprintsRouter, aiRouter);

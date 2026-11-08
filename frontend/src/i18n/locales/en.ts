@@ -1,0 +1,120 @@
+/**
+ * The English source dictionary. Values here are also the test contract:
+ * every string the existing tests assert must stay byte-for-byte identical.
+ */
+export const en = {
+  'common.cancel': 'Cancel',
+  'common.save': 'Save changes',
+  'common.delete': 'Delete',
+  'common.create': 'Create',
+  'common.tryAgain': 'Try again',
+  'common.loading': 'Loading…',
+
+  'theme.dark': 'Dark mode',
+  'theme.light': 'Light mode',
+  'theme.toDark': 'Switch to dark mode',
+  'theme.toLight': 'Switch to light mode',
+
+  'locale.label': 'Language',
+  'locale.english': 'English',
+  'locale.arabic': 'العربية',
+  'locale.switch': 'Change language',
+
+  'nav.backlog': 'Backlog',
+  'nav.board': 'Board',
+  'nav.sprints': 'Sprints',
+  'nav.statuses': 'Statuses',
+  'nav.projectNavigation': 'Project navigation',
+  'shell.openMenu': 'Open menu',
+  'shell.closeMenu': 'Close menu',
+  'shell.collapseSidebar': 'Collapse sidebar',
+  'shell.expandSidebar': 'Expand sidebar',
+  'shell.allProjects': 'All projects',
+  'shell.signOut': 'Sign out',
+  'shell.signedIn': 'Signed in',
+  'shell.switchProject': 'Switch project',
+  'shell.switchTo': 'Switch to',
+  'shell.loadingProjects': 'Loading projects…',
+  'shell.newProject': 'New project',
+
+  'projects.title': 'Projects',
+  'projects.description':
+    'Every project holds one backlog, its sprints and the todos inside them. Pick up where you left off, or start something new.',
+  'projects.all': 'All projects',
+  'projects.lastUpdated': 'Last updated first',
+  'projects.backlogItems': 'Backlog items',
+  'projects.activeSprints': 'Active sprints',
+  'projects.newProject': 'New project',
+  'projects.signOut': 'Sign out',
+  'projects.tryAgain': 'Try again',
+
+  'auth.eyebrow': 'Your sprint board with an AI teammate',
+  'auth.headlineA': 'Ship the sprint,',
+  'auth.headlineB': 'not the spreadsheet.',
+  'auth.description':
+    'Plan the work, move the cards and let Kanbot handle the summaries. Everything your personal sprint needs, in one quiet place.',
+  'auth.highlight1': 'Backlog, sprint and board in one place',
+  'auth.highlight2': 'An AI teammate that drafts and plans with you',
+  'auth.highlight3': 'A board that stays out of your way',
+
+  'projectForm.createTitle': 'Create a project',
+  'projectForm.editTitle': 'Edit project',
+  'projectForm.createDescription': 'A project holds one backlog, its sprints and todos.',
+  'projectForm.editDescription':
+    'Update the name, key or description. The project keeps all of its work.',
+  'projectForm.name': 'Project name',
+  'projectForm.namePlaceholder': 'Mobile app redesign',
+  'projectForm.key': 'Key',
+  'projectForm.description': 'Description',
+  'projectForm.descriptionPlaceholder': 'What is this project for?',
+  'projectForm.create': 'Create project',
+  'projectForm.background': 'Background',
+  'projectForm.backgroundHint': 'Pick a cover shown on the project card and workspace.',
+  'projectForm.noBackground': 'No background',
+  'projectForm.icon': 'Project icon',
+  'projectForm.iconHint': 'The glyph shown next to the project name.',
+  'projectForm.keyHintCreate':
+    'Optional — 2 to 6 letters. Leave it blank and Kanbot suggests one from the name.',
+  'projectForm.keyHintEdit':
+    'Changing the key only affects new todos. Existing todos keep the key they were created with.',
+
+  'statuses.title': 'Statuses',
+  'statuses.description':
+    'Statuses are the columns of this project. Add your own, rename them, choose a colour, or mark one as done.',
+  'statuses.add': 'Add status',
+  'statuses.addTitle': 'New status',
+  'statuses.editTitle': 'Edit status',
+  'statuses.name': 'Name',
+  'statuses.namePlaceholder': 'Testing',
+  'statuses.nameRequired': 'Name is required',
+  'statuses.color': 'Colour',
+  'statuses.colorSlate': 'Slate',
+  'statuses.colorBlue': 'Blue',
+  'statuses.colorViolet': 'Violet',
+  'statuses.colorGreen': 'Green',
+  'statuses.colorAmber': 'Amber',
+  'statuses.colorRose': 'Rose',
+  'statuses.colorTeal': 'Teal',
+  'statuses.colorIndigo': 'Indigo',
+  'statuses.done': 'Counts as done',
+  'statuses.doneHint': 'Todos in this status count toward progress and get a completion date.',
+  'statuses.order': 'Order',
+  'statuses.moveUp': 'Move status up',
+  'statuses.moveDown': 'Move status down',
+  'statuses.delete': 'Delete status',
+  'statuses.deleteTitle': 'Delete “{name}”?',
+  'statuses.deleteWarning': 'This column must be empty before it can be removed.',
+  'statuses.inUse': 'Move or delete the todos in this status first.',
+  'statuses.empty': 'No statuses yet. Add the first column.',
+  'statuses.newStatus': 'New status',
+  'statuses.saved': 'Status saved',
+  'statuses.todoCount': '{count} todos',
+  'statuses.doneBadge': 'Done',
+
+  'backlog.heading': 'Backlog',
+  'backlog.subtitle': 'Everything not in a sprint, grouped by status.',
+  'backlog.dragDisabled':
+    'Clear the search and filters to drag cards. Status changes stay available from each card menu.',
+} as const;
+
+export type TranslationKey = keyof typeof en;

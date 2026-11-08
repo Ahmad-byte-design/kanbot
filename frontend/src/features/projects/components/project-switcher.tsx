@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { PROJECT_ROUTES } from '../constants/projects.constants';
 import { useProjects } from '../hooks/use-projects';
+import { projectIcon } from '../lib/status-meta';
 import type { ProjectListItem } from '../types/projects.types';
 import { CheckIcon, ChevronDownIcon, PlusIcon } from '../../../assets/icons';
 import { ProjectFormDialog } from './project-form-dialog';
@@ -58,9 +59,14 @@ export function ProjectSwitcher({ current }: ProjectSwitcherProps) {
         aria-expanded={open}
         aria-haspopup="menu"
         aria-controls="project-switcher-menu"
-        className="flex w-full items-center gap-2 rounded-lg border border-sidebar-border bg-sidebar-hover px-2 py-1.5 text-left outline-none transition-colors hover:bg-sidebar-active focus-visible:ring-2 focus-visible:ring-white/40"
+        className="flex w-full items-center gap-2 rounded-lg border border-sidebar-border bg-sidebar-hover px-2 py-1.5 text-start outline-none transition-colors hover:bg-sidebar-active focus-visible:ring-2 focus-visible:ring-white/40"
       >
-        <ProjectMark projectId={current.id} projectKey={current.key} size="sm" />
+        <ProjectMark
+          projectId={current.id}
+          projectKey={current.key}
+          icon={projectIcon(current)}
+          size="sm"
+        />
         <span className="min-w-0 flex-1">
           <span className="block truncate text-[13px] font-medium text-sidebar-foreground">
             {current.name}
@@ -102,12 +108,17 @@ export function ProjectSwitcher({ current }: ProjectSwitcherProps) {
                     role="menuitem"
                     onClick={() => selectProject(project)}
                     className={[
-                      'flex w-full items-center gap-2.5 rounded-lg px-2 py-2 text-left text-sm outline-none transition-colors',
+                      'flex w-full items-center gap-2.5 rounded-lg px-2 py-2 text-start text-sm outline-none transition-colors',
                       'hover:bg-sidebar-hover focus-visible:ring-2 focus-visible:ring-white/40',
                       active ? 'bg-sidebar-active text-sidebar-foreground' : 'text-sidebar-foreground/90',
                     ].join(' ')}
                   >
-                    <ProjectMark projectId={project.id} projectKey={project.key} size="sm" />
+                    <ProjectMark
+                      projectId={project.id}
+                      projectKey={project.key}
+                      icon={projectIcon(project)}
+                      size="sm"
+                    />
                     <span className="min-w-0 flex-1 truncate">{project.name}</span>
                     <span className="text-[10px] tracking-[0.08em] text-sidebar-muted">
                       {project.key}
@@ -133,7 +144,7 @@ export function ProjectSwitcher({ current }: ProjectSwitcherProps) {
                 setOpen(false);
                 setCreateOpen(true);
               }}
-              className="flex w-full items-center gap-2 rounded-lg px-2 py-2 text-left text-xs text-sidebar-muted outline-none transition-colors hover:bg-sidebar-hover hover:text-sidebar-foreground focus-visible:ring-2 focus-visible:ring-white/40"
+              className="flex w-full items-center gap-2 rounded-lg px-2 py-2 text-start text-xs text-sidebar-muted outline-none transition-colors hover:bg-sidebar-hover hover:text-sidebar-foreground focus-visible:ring-2 focus-visible:ring-white/40"
             >
               <PlusIcon width={14} height={14} />
               New project

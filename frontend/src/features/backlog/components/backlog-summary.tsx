@@ -44,7 +44,7 @@ export function BacklogSummary({
           <dd className="font-display text-lg font-semibold tabular-nums text-foreground" aria-live="polite">
             {visibleCount}
             {filtered ? (
-              <span className="ml-1 text-xs font-normal text-muted-foreground">/ {totalCount}</span>
+              <span className="ms-1 text-xs font-normal text-muted-foreground">/ {totalCount}</span>
             ) : null}
           </dd>
         </div>
@@ -55,7 +55,7 @@ export function BacklogSummary({
           <dd className="font-display text-lg font-semibold tabular-nums text-foreground" aria-live="polite">
             {visiblePoints}
             {filtered && visiblePoints !== totalPoints ? (
-              <span className="ml-1 text-xs font-normal text-muted-foreground">/ {totalPoints}</span>
+              <span className="ms-1 text-xs font-normal text-muted-foreground">/ {totalPoints}</span>
             ) : null}
           </dd>
         </div>

@@ -1,5 +1,8 @@
 @import 'tailwindcss';
 
+/* Light/dark is driven by the `.dark` class that the theme store toggles. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /*
  * Kanbot design tokens
  * Primitive → semantic → component-ish aliases used by Tailwind utilities.
@@ -192,6 +195,13 @@
   --status-in-review-soft: rgb(101 84 192 / 0.24);
   --status-done: #57d9a3;
   --status-done-soft: rgb(0 135 90 / 0.24);
+}
+
+/* Arabic uses a typeface designed for the script; Latin fallbacks keep code,
+   numbers and mixed content legible. */
+html[dir='rtl'] {
+  --font-body: 'IBM Plex Sans Arabic', 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display-family: 'IBM Plex Sans Arabic', 'Plus Jakarta Sans', 'Inter', ui-sans-serif, system-ui, sans-serif;
 }
 
 @theme inline {

@@ -4,11 +4,9 @@ import type { DragEvent } from 'react';
 import { Alert } from '../../../components/ui';
 import { errorMessage } from '../../../services/client';
 import type { Sprint, Todo, TodoStatus } from '../../../types/api';
-import {
-  TODO_MESSAGES,
-  TODO_STATUS_DOTS,
-  TODO_STATUS_OPTIONS,
-} from '../constants/backlog.constants';
+import { TODO_MESSAGES } from '../constants/backlog.constants';
+import { useProjectStatuses } from '../../projects/context/project-statuses-context';
+import { STATUS_DOT_CLASS } from '../../projects/lib/status-meta';
 import { useMoveTodo } from '../hooks/use-move-todo';
 import { columnEdgePosition, dropPosition, groupByStatus } from '../lib/todo-meta';
 import { TodoCard } from './todo-card';
@@ -26,11 +24,11 @@ interface BacklogBoardProps {
 }
 
 /**
- * BL-1 / BL-5 / BL-7: the backlog as a kanban board.
+ * BL-1 / BL-5 / BL-7: the backlog as a status-grouped list.
  *
- * The backlog is a single ordered list on the server, so columns are a filtered
- * view of that order. Dropping inside a column posts a new global position;
- * dropping into another column only changes status, exactly as the API allows.
+ * The backlog is a single ordered list on the server, so status sections are a
+ * filtered view of that order. Dropping inside a section posts a new global
+ * position; dropping into another section only changes status.
  */
 export function BacklogBoard({
   projectId,
@@ -43,12 +41,16 @@ export function BacklogBoard({
   onMoveToStatus,
   onMoveToSprint,
 }: BacklogBoardProps) {
+  const statuses = useProjectStatuses();
   const moveTodo = useMoveTodo(projectId);
   const [draggingId, setDraggingId] = useState<string | null>(null);
   const [overId, setOverId] = useState<string | null>(null);
   const [overColumn, setOverColumn] = useState<TodoStatus | null>(null);
 
-  const columns = useMemo(() => groupByStatus(todos), [todos]);
+  const columns = useMemo(
+    () => groupByStatus(todos, statuses.map((status) => status.id)),
+    [todos, statuses],
+  );
   const draggingTodo = draggingId ? todos.find((todo) => todo.id === draggingId) : undefined;
 
   function clearDrag() {
@@ -113,44 +115,42 @@ export function BacklogBoard({
         </div>
       ) : null}
 
-      <div className="border-t border-border bg-board p-2 sm:p-2.5">
+      <div className="border-t border-border bg-board p-2 sm:p-3">
         <div
           role="region"
           aria-label={TODO_MESSAGES.boardLabel}
-          className="grid grid-flow-col auto-cols-[minmax(16rem,1fr)] gap-3 overflow-x-auto pb-1 lg:grid-flow-row lg:auto-cols-auto lg:grid-cols-4 lg:overflow-visible"
+          className="mx-auto flex max-w-5xl flex-col gap-2.5"
         >
-          {TODO_STATUS_OPTIONS.map(({ value: status, label }, index) => {
-            const columnTodos = columns[status];
+          {statuses.map((status, index) => {
+            const columnTodos = columns[status.id] ?? [];
             const points = columnTodos.reduce((sum, todo) => sum + (todo.storyPoints ?? 0), 0);
-            const isDropColumn = Boolean(draggingTodo) && overColumn === status;
+            const isDropColumn = Boolean(draggingTodo) && overColumn === status.id;
+            const dot = STATUS_DOT_CLASS[status.color];
 
             return (
               <motion.section
-                key={status}
-                aria-label={`${label} column`}
+                key={status.id}
+                aria-label={`${status.name} column`}
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.22, delay: index * 0.035, ease: [0.22, 1, 0.36, 1] }}
                 className={[
-                  'relative flex min-h-[11rem] flex-col overflow-hidden rounded-lg border bg-card/60 transition-colors',
+                  'relative overflow-hidden rounded-lg border bg-card/60 transition-colors',
                   isDropColumn ? 'border-primary/50 bg-primary/[0.03]' : 'border-border',
                 ].join(' ')}
               >
-                <span
-                  aria-hidden="true"
-                  className={['absolute inset-x-0 top-0 h-0.5', TODO_STATUS_DOTS[status]].join(' ')}
-                />
-
                 <header className="flex items-center justify-between gap-2 border-b border-border/80 bg-card/70 px-2.5 py-1.5">
                   <div className="flex min-w-0 items-center gap-1.5">
-                    <span
-                      aria-hidden="true"
-                      className={['size-2 shrink-0 rounded-full', TODO_STATUS_DOTS[status]].join(' ')}
-                    />
+                    <span aria-hidden="true" className={['size-2 shrink-0 rounded-full', dot].join(' ')} />
                     <h3 className="truncate text-[11px] font-semibold tracking-[0.1em] text-foreground uppercase">
-                      {label}
+                      {status.name}
                     </h3>
-                    <span className="ml-0.5 rounded-full bg-background px-1.5 py-0.5 text-[10px] font-semibold tabular-nums text-muted-foreground ring-1 ring-border">
+                    {status.done ? (
+                      <span className="rounded-full bg-success/10 px-1.5 py-0.5 text-[9px] font-semibold tracking-[0.08em] text-success uppercase">
+                        Done
+                      </span>
+                    ) : null}
+                    <span className="ms-0.5 rounded-full bg-background px-1.5 py-0.5 text-[10px] font-semibold tabular-nums text-muted-foreground ring-1 ring-border">
                       {columnTodos.length}
                     </span>
                   </div>
@@ -164,28 +164,28 @@ export function BacklogBoard({
                 </header>
 
                 <ul
-                  aria-label={`${label} todos`}
+                  aria-label={`${status.name} todos`}
                   onDragOver={(event) => {
                     if (!canReorder || !draggingId) return;
                     event.preventDefault();
-                    setOverColumn(status);
+                    setOverColumn(status.id);
                   }}
                   onDragLeave={(event) => {
                     if (event.currentTarget.contains(event.relatedTarget as Node | null)) return;
-                    setOverColumn((current) => (current === status ? null : current));
+                    setOverColumn((current) => (current === status.id ? null : current));
                   }}
-                  onDrop={(event) => handleColumnDrop(event, status)}
-                  className="flex flex-1 flex-col gap-1.5 p-1.5"
+                  onDrop={(event) => handleColumnDrop(event, status.id)}
+                  className="flex flex-col gap-1 p-1.5"
                 >
-                  {columnTodos.map((todo, index) => (
+                  {columnTodos.map((todo, todoIndex) => (
                     <TodoCard
                       key={todo.id}
                       todo={todo}
                       sprints={sprints}
                       canReorder={canReorder}
                       reorderHint={reorderHint}
-                      isFirst={index === 0}
-                      isLast={index === columnTodos.length - 1}
+                      isFirst={todoIndex === 0}
+                      isLast={todoIndex === columnTodos.length - 1}
                       dragging={draggingId === todo.id}
                       dropTarget={overId === todo.id && draggingId !== todo.id}
                       onOpen={onOpen}
@@ -204,7 +204,7 @@ export function BacklogBoard({
                       onDragOver={(item) => {
                         if (!draggingId || draggingId === item.id) return;
                         setOverId(item.id);
-                        setOverColumn(status);
+                        setOverColumn(status.id);
                       }}
                       onDragLeave={(item) => {
                         setOverId((current) => (current === item.id ? null : current));
@@ -214,7 +214,7 @@ export function BacklogBoard({
                   ))}
 
                   {columnTodos.length === 0 ? (
-                    <li className="grid min-h-24 flex-1 place-items-center rounded-lg border border-dashed border-border px-3 py-6 text-center text-xs text-muted-foreground">
+                    <li className="grid min-h-11 place-items-center rounded-md border border-dashed border-border px-3 py-3 text-center text-xs text-muted-foreground">
                       {TODO_MESSAGES.emptyColumn}
                     </li>
                   ) : null}

@@ -40,7 +40,7 @@ export function ProjectErrorState({ notFound, message, onRetry }: ProjectErrorSt
             to={PROJECT_ROUTES.list}
             className="inline-flex h-10 items-center justify-center gap-2 rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
-            <ArrowLeftIcon width={16} height={16} />
+            <ArrowLeftIcon width={16} height={16} className="rtl:rotate-180" />
             Back to projects
           </Link>
         </div>

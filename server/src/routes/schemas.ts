@@ -1,8 +1,14 @@
 import { z } from 'zod';
-import { STORY_POINTS, TODO_PRIORITIES, TODO_STATUSES, TODO_TYPES } from '../types/api.js';
+import { STORY_POINTS, TODO_PRIORITIES, TODO_TYPES } from '../types/api.js';
 
 export const dateOnly = z.iso.date('Use the format YYYY-MM-DD');
-export const status = z.enum(TODO_STATUSES);
+/** A project-owned status id, e.g. "todo", "in_progress" or "testing". */
+export const status = z
+  .string()
+  .trim()
+  .min(1, 'Choose a status')
+  .max(40)
+  .regex(/^[a-z0-9_]+$/, 'Invalid status');
 export const priority = z.enum(TODO_PRIORITIES);
 export const todoType = z.enum(TODO_TYPES);
 export const storyPoints = z
@@ -15,7 +21,7 @@ export const createTodoSchema = z.object({
   title: z.string().trim().min(1, 'Title is required').max(200),
   description: z.string().max(5000).default(''),
   type: todoType.default('task'),
-  status: status.default('todo'),
+  status: status.optional(),
   priority: priority.default('medium'),
   storyPoints: storyPoints.nullable().default(null),
   labels: z.array(z.string().trim().min(1).max(30)).max(10).default([]),

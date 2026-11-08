@@ -58,7 +58,7 @@ export function SelectField({
         <select
           id={selectId}
           className={[
-            'h-9 w-full appearance-none rounded-md border bg-background px-2.5 pr-8 text-[13px] text-foreground transition-colors',
+            'h-9 w-full appearance-none rounded-md border bg-background px-2.5 pe-8 text-[13px] text-foreground transition-colors',
             'outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30',
             'disabled:cursor-not-allowed disabled:opacity-50',
             error
@@ -84,7 +84,7 @@ export function SelectField({
             </option>
           ))}
         </select>
-        <span className="pointer-events-none absolute inset-y-0 right-2.5 flex items-center text-muted-foreground">
+        <span className="pointer-events-none absolute inset-y-0 end-2.5 flex items-center text-muted-foreground">
           <ChevronDown size={15} strokeWidth={1.8} aria-hidden="true" />
         </span>
       </div>

@@ -239,6 +239,35 @@ describe('sprint board moves', () => {
     expect(moved.sprint.stats.byStatus.done).toBe(2);
   });
 
+  it('moves a card into a project-defined status column', () => {
+    const board: SprintBoardResponse = {
+      sprint: makeSprint({ status: 'active' }),
+      columns: {
+        todo: [...columns.todo],
+        in_progress: [...columns.in_progress],
+        in_review: [],
+        done: [...columns.done],
+        testing: [makeTodo({ id: 'x', key: 'KAN-9', status: 'testing', order: 0 })],
+      },
+    };
+
+    const moved = moveBoardTodo(board, 'a', 'testing', 1, ['done']);
+
+    expect(moved.columns.todo).toHaveLength(0);
+    expect(moved.columns.testing.map((todo) => todo.id)).toEqual(['x', 'a']);
+    expect(moved.columns.testing.map((todo) => todo.order)).toEqual([0, 1]);
+    expect(moved.columns.testing[1]?.status).toBe('testing');
+    expect(moved.sprint.stats.totalTodos).toBe(5);
+    // "testing" is not a done column, so only KAN-4 counts.
+    expect(moved.sprint.stats.doneTodos).toBe(1);
+
+    // A card already sitting in a custom column can move out of it too.
+    const fromCustom = moveBoardTodo(moved, 'x', 'done', 0, ['done']);
+    expect(fromCustom.columns.testing.map((todo) => todo.id)).toEqual(['a']);
+    expect(fromCustom.columns.done.map((todo) => todo.id)).toEqual(['x', 'd']);
+    expect(fromCustom.sprint.stats.doneTodos).toBe(2);
+  });
+
   it('keeps the original board when the card is missing', () => {
     const board: SprintBoardResponse = {
       sprint: makeSprint({ status: 'active' }),

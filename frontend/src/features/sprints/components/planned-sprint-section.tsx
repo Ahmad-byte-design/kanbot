@@ -12,6 +12,7 @@ import {
   StatusTag,
   TypeTag,
 } from '../../backlog/components/todo-tags';
+import { useProjectStatuses } from '../../projects/context/project-statuses-context';
 import { SPRINT_MESSAGES } from '../constants/sprints.constants';
 import { formatSprintRange, sortSprintTodos, sprintStats } from '../lib/sprint-meta';
 import { SprintStatusBadge } from './sprint-status-badge';
@@ -45,21 +46,25 @@ export function PlannedSprintSection({
   onDelete,
   onStart,
 }: PlannedSprintSectionProps) {
+  const statuses = useProjectStatuses();
   const [open, setOpen] = useState(true);
   const bodyId = useId();
   const stats = sprintStats(sprint);
-  const orderedTodos = sortSprintTodos(todos);
+  const orderedTodos = sortSprintTodos(
+    todos,
+    statuses.map((status) => status.id),
+  );
   const startBlocked = Boolean(activeSprintName);
 
   return (
     <article className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
-      <div className="flex items-stretch gap-1 border-b border-border bg-muted/20 pr-2">
+      <div className="flex items-stretch gap-1 border-b border-border bg-muted/20 pe-2">
         <button
           type="button"
           onClick={() => setOpen((value) => !value)}
           aria-expanded={open}
           aria-controls={bodyId}
-          className="flex min-w-0 flex-1 items-center gap-3 rounded-sm px-3 py-3 text-left outline-none transition-colors hover:bg-muted/40 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring sm:px-4"
+          className="flex min-w-0 flex-1 items-center gap-3 rounded-sm px-3 py-3 text-start outline-none transition-colors hover:bg-muted/40 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring sm:px-4"
         >
           <ChevronDownIcon
             width={16}
@@ -158,7 +163,7 @@ export function PlannedSprintSection({
                   <button
                     type="button"
                     onClick={() => onOpenTodo(todo)}
-                    className="flex w-full items-center gap-2.5 px-3 py-2.5 text-left outline-none transition-colors hover:bg-muted/40 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring sm:px-4"
+                    className="flex w-full items-center gap-2.5 px-3 py-2.5 text-start outline-none transition-colors hover:bg-muted/40 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring sm:px-4"
                   >
                     <span className="w-14 shrink-0 font-mono text-[11px] font-semibold tracking-[0.04em] text-muted-foreground">
                       {todo.key}

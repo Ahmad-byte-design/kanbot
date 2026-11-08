@@ -5,8 +5,8 @@
 import { db, type ProjectRecord, type SprintRecord, type TodoRecord, type UserRecord } from '../db/store.js';
 import { conflict, notFound } from '../lib/errors.js';
 import {
-  TODO_STATUSES,
   type Project,
+  type ProjectStatus,
   type ProjectWithStats,
   type Sprint,
   type SprintStats,
@@ -81,10 +81,12 @@ export function nextOrder(where: Pick<TodoRecord, 'projectId' | 'sprintId' | 'st
   return list.length ? list[list.length - 1]!.order + 1 : 0;
 }
 
-/** Sets status and keeps completedAt in sync. */
+/** Sets status and keeps completedAt in sync with the project's done columns. */
 export function applyStatus(todo: TodoRecord, status: TodoStatus) {
-  if (todo.status !== 'done' && status === 'done') todo.completedAt = now();
-  if (status !== 'done') todo.completedAt = null;
+  const project = db.data.projects.find((p) => p.id === todo.projectId);
+  const done = project ? isDoneStatus(project, status) : status === 'done';
+  if (done && !todo.completedAt) todo.completedAt = now();
+  if (!done) todo.completedAt = null;
   todo.status = status;
 }
 
@@ -104,15 +106,48 @@ export function moveTodo(todo: TodoRecord, target: { sprintId: string | null; st
 // ───────────── Sprint stats ─────────────
 
 export function statsFor(todos: TodoRecord[]): SprintStats {
-  const byStatus = Object.fromEntries(TODO_STATUSES.map((s) => [s, 0])) as Record<TodoStatus, number>;
+  const project = todos[0] ? db.data.projects.find((p) => p.id === todos[0]!.projectId) : undefined;
+  const doneIds = new Set(
+    (project?.statuses ?? [{ id: 'done', done: true }]).filter((status) => status.done).map((s) => s.id),
+  );
+  const byStatus: Record<TodoStatus, number> = {};
   let totalPoints = 0;
   let donePoints = 0;
+  let doneTodos = 0;
   for (const t of todos) {
-    byStatus[t.status]++;
+    byStatus[t.status] = (byStatus[t.status] ?? 0) + 1;
     totalPoints += t.storyPoints ?? 0;
-    if (t.status === 'done') donePoints += t.storyPoints ?? 0;
+    if (doneIds.has(t.status)) {
+      doneTodos += 1;
+      donePoints += t.storyPoints ?? 0;
+    }
   }
-  return { totalTodos: todos.length, doneTodos: byStatus.done, totalPoints, donePoints, byStatus };
+  return { totalTodos: todos.length, doneTodos, totalPoints, donePoints, byStatus };
+}
+
+/** The project's statuses in display order. */
+export function projectStatuses(project: ProjectRecord): ProjectStatus[] {
+  return [...project.statuses].sort((a, b) => a.order - b.order);
+}
+
+/** The status a new todo lands in when the client does not send one. */
+export function defaultStatusId(project: ProjectRecord): string {
+  return projectStatuses(project)[0]?.id ?? 'todo';
+}
+
+/** Board rank used when sorting todos by their column. */
+export function statusRanks(project: ProjectRecord): Record<string, number> {
+  return Object.fromEntries(projectStatuses(project).map((status, index) => [status.id, index]));
+}
+
+/** True when `statusId` belongs to the project. */
+export function hasStatus(project: ProjectRecord, statusId: string): boolean {
+  return project.statuses.some((status) => status.id === statusId);
+}
+
+/** True when the status counts as done (and therefore completes todos). */
+export function isDoneStatus(project: ProjectRecord, statusId: string): boolean {
+  return project.statuses.some((status) => status.id === statusId && status.done);
 }
 
 export const todosOfSprint = (sprintId: string) => db.data.todos.filter((t) => t.sprintId === sprintId).sort(byOrder);
@@ -140,6 +175,9 @@ export const toProject = (p: ProjectRecord): Project => ({
   name: p.name,
   key: p.key,
   description: p.description,
+  background: p.background ?? null,
+  icon: p.icon ?? 'layers',
+  statuses: [...(p.statuses ?? [])].sort((a, b) => a.order - b.order),
   createdAt: p.createdAt,
   updatedAt: p.updatedAt,
 });

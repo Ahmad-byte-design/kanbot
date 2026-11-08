@@ -10,11 +10,12 @@ import {
 import { zodFieldErrors } from '../../../lib/zod-field-errors';
 import { errorMessage } from '../../../services/client';
 import type { Sprint, Todo } from '../../../types/api';
+import { useProjectStatuses } from '../../projects/context/project-statuses-context';
+import { statusOptions } from '../../projects/lib/status-meta';
 import {
   TODO_LIMITS,
   TODO_MESSAGES,
   TODO_PRIORITY_OPTIONS,
-  TODO_STATUS_OPTIONS,
   TODO_STORY_POINT_OPTIONS,
   TODO_TYPE_OPTIONS,
 } from '../constants/backlog.constants';
@@ -53,6 +54,8 @@ export function TodoFormDialog({
 }: TodoFormDialogProps) {
   const updateTodo = useUpdateTodo(projectId);
   const deleteTodo = useDeleteTodo(projectId);
+  const statuses = useProjectStatuses();
+  const statusChoices = statusOptions(statuses);
 
   const [initialValues] = useState<TodoFormValues>(() => toTodoFormValues(todo));
   const [values, setValues] = useState<TodoFormValues>(initialValues);
@@ -140,7 +143,7 @@ export function TodoFormDialog({
           <Button
             type="button"
             variant="ghost"
-            className="text-destructive hover:bg-destructive/10 hover:text-destructive sm:mr-auto"
+            className="text-destructive hover:bg-destructive/10 hover:text-destructive sm:me-auto"
             onClick={() => {
               setConfirmingDiscard(false);
               setConfirmingDelete(true);
@@ -265,7 +268,7 @@ export function TodoFormDialog({
             label="Status"
             value={values.status}
             onChange={(value) => updateField('status', value)}
-            options={TODO_STATUS_OPTIONS}
+            options={statusChoices}
             error={errors.status}
             disabled={pending}
           />

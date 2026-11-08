@@ -17,7 +17,9 @@ export default defineConfig({
         globals: true,
         setupFiles: ['./src/test/setup.ts'],
         css: false,
-        testTimeout: 10_000
+        // The flow tests drive full pages with user-event; keep headroom for
+        // slower CI machines where jsdom work competes with other suites.
+        testTimeout: 20_000
       }
     }, {
       extends: true,

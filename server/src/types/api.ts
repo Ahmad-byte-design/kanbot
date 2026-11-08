@@ -72,12 +72,12 @@ export interface MeResponse {
 // ───────────────────────────── Projects ─────────────────────────────
 
 /** The board columns a new project starts with. */
-export const DEFAULT_PROJECT_STATUSES = [
+export const DEFAULT_PROJECT_STATUSES: ProjectStatus[] = [
   { id: 'todo', name: 'To do', color: 'slate', done: false, order: 0 },
   { id: 'in_progress', name: 'In progress', color: 'blue', done: false, order: 1 },
   { id: 'in_review', name: 'In review', color: 'violet', done: false, order: 2 },
   { id: 'done', name: 'Done', color: 'green', done: true, order: 3 },
-] as const;
+];
 
 export const STATUS_COLORS = [
   'slate',
@@ -165,15 +165,31 @@ export interface CreateProjectRequest {
   name: string; // 1–80 chars
   key?: string; // 2–6 letters; generated from the name when omitted
   description?: string; // ≤ 500 chars
+  /** Background image id from `ProjectBackground`, or null for no image. */
+  background?: string | null;
+  /** Icon key, see PROJECT_ICONS. */
+  icon?: ProjectIcon;
 }
 
 export type UpdateProjectRequest = Partial<CreateProjectRequest>;
 
+/** POST /projects/:projectId/statuses */
+export interface CreateProjectStatusRequest {
+  name: string; // 1–40 chars
+  color?: StatusColor; // default "slate"
+  done?: boolean; // default false
+  order?: number; // appended when omitted
+}
+
+/** PATCH /projects/:projectId/statuses/:statusId */
+export type UpdateProjectStatusRequest = Partial<CreateProjectStatusRequest>;
+
 // ───────────────────────────── Todos ─────────────────────────────
 
-/** The four board columns, in display order. */
+/** The default status slugs; projects may add or rename their own. */
 export const TODO_STATUSES = ['todo', 'in_progress', 'in_review', 'done'] as const;
-export type TodoStatus = (typeof TODO_STATUSES)[number];
+/** A status id owned by the project (`project.statuses`). */
+export type TodoStatus = string;
 
 export const TODO_PRIORITIES = ['low', 'medium', 'high', 'urgent'] as const;
 export type TodoPriority = (typeof TODO_PRIORITIES)[number];

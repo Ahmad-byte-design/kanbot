@@ -1,39 +1,49 @@
 import type { QueryClient } from '@tanstack/react-query';
-import {
-  TODO_STATUSES,
-  type SprintBoardResponse,
-  type SprintStats,
-  type Todo,
-  type TodoStatus,
+import type {
+  SprintBoardResponse,
+  SprintStats,
+  Todo,
+  TodoStatus,
 } from '../../../types/api';
 import { projectKeys } from '../../projects/query-keys';
 import { todoKeys } from '../../backlog/query-keys';
 import { sprintKeys } from '../query-keys';
 import type { SprintColumns } from '../types/sprints.types';
 
+const DEFAULT_DONE_STATUSES = ['done'] as const;
+
 function renumberColumn(todos: Todo[]): Todo[] {
   return todos.map((todo, index) => (todo.order === index ? todo : { ...todo, order: index }));
 }
 
-export function statsFromColumns(columns: SprintColumns): SprintStats {
-  const byStatus = Object.fromEntries(TODO_STATUSES.map((status) => [status, 0])) as Record<
-    TodoStatus,
-    number
-  >;
+/**
+ * Stats from a board's columns. `doneStatusIds` comes from the project so
+ * custom "counts as done" columns move the progress bar exactly like the
+ * server does.
+ */
+export function statsFromColumns(
+  columns: SprintColumns,
+  doneStatusIds: readonly string[] = DEFAULT_DONE_STATUSES,
+): SprintStats {
+  const done = new Set(doneStatusIds);
+  const byStatus: Record<TodoStatus, number> = {};
   let totalTodos = 0;
   let totalPoints = 0;
   let donePoints = 0;
 
-  for (const status of TODO_STATUSES) {
-    for (const todo of columns[status]) {
-      byStatus[status] += 1;
+  for (const status of Object.keys(columns)) {
+    for (const todo of columns[status] ?? []) {
+      byStatus[status] = (byStatus[status] ?? 0) + 1;
       totalTodos += 1;
       totalPoints += todo.storyPoints ?? 0;
-      if (status === 'done') donePoints += todo.storyPoints ?? 0;
+      if (done.has(status)) donePoints += todo.storyPoints ?? 0;
     }
   }
 
-  return { totalTodos, doneTodos: byStatus.done, totalPoints, donePoints, byStatus };
+  let doneTodos = 0;
+  for (const status of done) doneTodos += byStatus[status] ?? 0;
+
+  return { totalTodos, doneTodos, totalPoints, donePoints, byStatus };
 }
 
 /**
@@ -43,20 +53,26 @@ export function statsFromColumns(columns: SprintColumns): SprintStats {
  * removing the card from its source column shifts every later position, then
  * the card is inserted at `position` in the target column and both columns are
  * renumbered 0..n-1. Stats are recomputed so the progress bar moves at once.
+ *
+ * Column keys come from the board itself, not a fixed status list, so a todo
+ * can move into a status the project added after the board first loaded.
  */
 export function moveBoardTodo(
   data: SprintBoardResponse,
   todoId: string,
   status: TodoStatus,
   position: number,
+  doneStatusIds: readonly string[] = DEFAULT_DONE_STATUSES,
 ): SprintBoardResponse {
-  const sourceStatus = TODO_STATUSES.find((key) =>
-    data.columns[key].some((todo) => todo.id === todoId),
+  const statusKeys = Object.keys(data.columns);
+  const sourceStatus = statusKeys.find((key) =>
+    (data.columns[key] ?? []).some((todo) => todo.id === todoId),
   );
   if (!sourceStatus) return data;
 
+  const keys = statusKeys.includes(status) ? statusKeys : [...statusKeys, status];
   const columns = Object.fromEntries(
-    TODO_STATUSES.map((key) => [key, [...data.columns[key]]]),
+    keys.map((key) => [key, [...(data.columns[key] ?? [])]]),
   ) as SprintColumns;
 
   const from = columns[sourceStatus].findIndex((todo) => todo.id === todoId);
@@ -65,14 +81,14 @@ export function moveBoardTodo(
   const [todo] = columns[sourceStatus].splice(from, 1);
   if (!todo) return data;
 
-  const target = columns[status];
+  const target = columns[status] ?? (columns[status] = []);
   const clamped = Math.max(0, Math.min(position, target.length));
   target.splice(clamped, 0, { ...todo, status });
 
-  for (const key of TODO_STATUSES) columns[key] = renumberColumn(columns[key]);
+  for (const key of keys) columns[key] = renumberColumn(columns[key] ?? []);
 
   return {
-    sprint: { ...data.sprint, stats: statsFromColumns(columns) },
+    sprint: { ...data.sprint, stats: statsFromColumns(columns, doneStatusIds) },
     columns,
   };
 }

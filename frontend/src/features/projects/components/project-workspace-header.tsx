@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { ArrowLeftIcon } from '../../../assets/icons';
 import { PROJECT_ROUTES } from '../constants/projects.constants';
 import { projectToneClass } from '../lib/project-tone';
+import { projectIcon } from '../lib/status-meta';
 import type { ProjectListItem } from '../types/projects.types';
 import { ProjectMark } from './project-mark';
 import { AssistantTrigger } from '../../ai/components/assistant-trigger';
@@ -31,23 +32,28 @@ export function ProjectWorkspaceHeader({
   return (
     <header
       className={[
-        'sticky top-0 z-20 border-b border-border bg-card/90 backdrop-blur',
+        'sticky top-0 z-20 overflow-hidden border-b border-border/70 bg-card/75 backdrop-blur-xl',
         projectToneClass(project.id),
       ].join(' ')}
     >
-      <div className="flex min-h-12 flex-wrap items-center gap-2 px-3 py-1.5 sm:px-5">
+      <div className="relative flex min-h-12 flex-wrap items-center gap-2 px-3 py-1.5 sm:px-5">
         <Link
           to={PROJECT_ROUTES.list}
           aria-label="All projects"
           title="All projects"
           className="grid size-7 shrink-0 place-items-center rounded-md text-muted-foreground outline-none transition-colors hover:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
         >
-          <ArrowLeftIcon width={15} height={15} />
+          <ArrowLeftIcon width={15} height={15} className="rtl:rotate-180" />
         </Link>
 
         <span className="h-5 w-px shrink-0 bg-border" aria-hidden="true" />
 
-        <ProjectMark projectId={project.id} projectKey={project.key} size="sm" />
+        <ProjectMark
+          projectId={project.id}
+          projectKey={project.key}
+          icon={projectIcon(project)}
+          size="sm"
+        />
 
         <div className="flex min-w-0 flex-1 items-center gap-2">
           <motion.h1
@@ -73,7 +79,7 @@ export function ProjectWorkspaceHeader({
           ) : null}
         </div>
 
-        <div className="ml-auto flex shrink-0 items-center gap-1.5">
+        <div className="ms-auto flex shrink-0 items-center gap-1.5">
           <AssistantTrigger />
           {actions}
         </div>

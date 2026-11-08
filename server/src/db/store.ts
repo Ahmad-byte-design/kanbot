@@ -3,6 +3,8 @@ import { rename, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { env } from '../config/env.js';
 import type {
+  ProjectIcon,
+  ProjectStatus,
   SprintStats,
   SprintStatus,
   SprintSummary,
@@ -11,6 +13,7 @@ import type {
   TodoStatus,
   TodoType,
 } from '../types/api.js';
+import { DEFAULT_PROJECT_STATUSES } from '../types/api.js';
 
 // ── Records (internal shapes — convert with serializers before sending) ──
 
@@ -28,6 +31,12 @@ export interface ProjectRecord {
   name: string;
   key: string;
   description: string;
+  /** Background image id from the shipped assets, or null. */
+  background: string | null;
+  /** Icon key rendered by the frontend. */
+  icon: ProjectIcon;
+  /** Ordered board columns owned by this project. */
+  statuses: ProjectStatus[];
   /** Next number for todo keys (KAN-<n>). */
   nextTodoNumber: number;
   /** Next number for default sprint names (Sprint <n>). */
@@ -95,6 +104,23 @@ class JsonStore {
   constructor() {
     mkdirSync(dirname(this.file), { recursive: true });
     this.data = existsSync(this.file) ? { ...empty(), ...JSON.parse(readFileSync(this.file, 'utf8')) } : empty();
+    this.migrate();
+  }
+
+  /**
+   * Older data files predate configurable statuses, backgrounds and icons.
+   * Fill sensible defaults in memory so every request sees a complete project.
+   */
+  private migrate() {
+    for (const project of this.data.projects) {
+      if (!Array.isArray(project.statuses) || project.statuses.length === 0) {
+        project.statuses = DEFAULT_PROJECT_STATUSES.map((status) => ({ ...status }));
+      } else {
+        project.statuses = [...project.statuses].sort((a, b) => a.order - b.order);
+      }
+      if (project.background === undefined) project.background = null;
+      if (!project.icon) project.icon = 'layers';
+    }
   }
 
   /** Mutate data, then persist. Returns whatever the mutator returns. */
